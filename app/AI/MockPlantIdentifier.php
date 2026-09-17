@@ -47,26 +47,40 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
             ]);
         }
 
-        // Specific species matching based on filename keywords
-        $targetSpecies = 'Lagerstroemia speciosa'; // Default Banaba
-        if (str_contains($filenameLower, 'sambong')) {
+        // Species keyword matching from filename or metadata hints
+        $targetSpecies = 'Blumea balsamifera'; // Default to Sambong for general herbal leaf uploads
+        $altSpecies = 'Lagerstroemia speciosa'; // Banaba as alternative candidate
+
+        if (str_contains($filenameLower, 'banaba')) {
+            $targetSpecies = 'Lagerstroemia speciosa';
+            $altSpecies = 'Blumea balsamifera';
+        } elseif (str_contains($filenameLower, 'sambong')) {
             $targetSpecies = 'Blumea balsamifera';
+            $altSpecies = 'Lagerstroemia speciosa';
         } elseif (str_contains($filenameLower, 'lagundi')) {
             $targetSpecies = 'Vitex negundo';
+            $altSpecies = 'Vitex parviflora';
         } elseif (str_contains($filenameLower, 'narra')) {
             $targetSpecies = 'Pterocarpus indicus';
+            $altSpecies = 'Diospyros blancoí';
         } elseif (str_contains($filenameLower, 'katmon')) {
             $targetSpecies = 'Dillenia philippinensis';
+            $altSpecies = 'Lagerstroemia speciosa';
         } elseif (str_contains($filenameLower, 'akapulko')) {
             $targetSpecies = 'Senna alata';
+            $altSpecies = 'Carmona retusa';
         } elseif (str_contains($filenameLower, 'tsaa') || str_contains($filenameLower, 'gubat')) {
             $targetSpecies = 'Carmona retusa';
+            $altSpecies = 'Senna alata';
         } elseif (str_contains($filenameLower, 'kamagong') || str_contains($filenameLower, 'mabolo')) {
             $targetSpecies = 'Diospyros blancoí';
+            $altSpecies = 'Pterocarpus indicus';
         } elseif (str_contains($filenameLower, 'molave')) {
             $targetSpecies = 'Vitex parviflora';
+            $altSpecies = 'Vitex negundo';
         } elseif (str_contains($filenameLower, 'tuba') || str_contains($filenameLower, 'jatropha') || str_contains($filenameLower, 'poison')) {
             $targetSpecies = 'Jatropha curcas';
+            $altSpecies = 'Ricinus communis';
         }
 
         $pdo = Database::getConnection();
@@ -80,11 +94,14 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
             $plant = $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
-        // Multi-photo confidence boost calculation
-        $isMulti = count($imagePaths) > 1;
-        $baseConfidence = $isMulti ? 94.0 : 86.5;
+        // Fetch alternative plant for comparison
+        $stmtAlt = $pdo->prepare("SELECT * FROM plants WHERE scientific_name = ?");
+        $stmtAlt->execute([$altSpecies]);
+        $altPlant = $stmtAlt->fetch(PDO::FETCH_ASSOC);
 
-        // Context bonus if user provided matching metadata
+        $isMulti = count($imagePaths) > 1;
+        $baseConfidence = $isMulti ? 94.0 : 88.0;
+
         if (!empty($metadata['province']) || !empty($metadata['location_found'])) {
             $baseConfidence = min(98.5, $baseConfidence + 2.5);
         }
@@ -98,21 +115,21 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
                 'genus' => $plant['genus'],
                 'species' => $plant['species'],
                 'confidence' => $baseConfidence,
-                'reasoning_summary' => "Diagnostic visual features confirm " . strtolower($plant['leaf_arrangement'] ?? 'opposite') . " leaf arrangement, " . strtolower($plant['leaf_margin'] ?? 'entire') . " margins, and " . strtolower($plant['venation'] ?? 'pinnate') . " venation pattern characteristic of " . $plant['primary_common_name'] . "."
+                'reasoning_summary' => "Diagnostic visual features confirm " . strtolower($plant['leaf_arrangement'] ?? 'alternate') . " leaf arrangement, serrated " . strtolower($plant['leaf_margin'] ?? 'toothed') . " margins, " . strtolower($plant['leaf_type'] ?? 'simple') . " blade, and " . strtolower($plant['venation'] ?? 'pinnate') . " venation characteristic of " . $plant['primary_common_name'] . " (" . $plant['scientific_name'] . ")."
             ],
             'alternative_candidates' => [
                 [
-                    'scientific_name' => 'Related Philippine Species',
-                    'common_name' => 'Similar Shrub Specimen',
-                    'confidence_percentage' => 11.5,
-                    'distinction_notes' => 'Differs in petiole length, serration density, and leaf surface texture.'
+                    'scientific_name' => $altPlant['scientific_name'] ?? 'Lagerstroemia speciosa',
+                    'common_name' => $altPlant['primary_common_name'] ?? 'Banaba',
+                    'confidence_percentage' => 12.0,
+                    'distinction_notes' => 'Banaba leaves are smooth, thick, and strictly opposite, whereas Sambong leaves have serrated margins, velvety hairy surfaces, and alternate arrangement.'
                 ]
             ],
             'visible_features' => [
                 'Leaf type: ' . ($plant['leaf_type'] ?? 'Simple'),
-                'Arrangement: ' . ($plant['leaf_arrangement'] ?? 'Opposite'),
+                'Arrangement: ' . ($plant['leaf_arrangement'] ?? 'Alternate'),
                 'Venation: ' . ($plant['venation'] ?? 'Pinnate'),
-                'Habit: ' . ($plant['growth_habit'] ?? 'Tree')
+                'Margin: ' . ($plant['leaf_margin'] ?? 'Serrated')
             ],
             'philippine_context' => [
                 'native_status' => $plant['native_status'],
@@ -120,15 +137,15 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
                 'habitat' => $plant['habitat']
             ],
             'uses' => [
-                'ecological' => ['Habitat provision', 'Canopy cover'],
-                'agricultural' => ['Horticultural propagation', 'Wood source'],
-                'traditional' => ['Traditional ethnobotanical preparation']
+                'ecological' => ['Habitat provision', 'Pioneer species'],
+                'agricultural' => ['Companion crop', 'Bio-pesticide'],
+                'traditional' => ['Traditional herbal tea preparation']
             ],
             'medicinal' => [
-                'classification' => 'TRADITIONALLY_USED',
-                'evidence_level' => 'SUPPORTED_BY_SOME_RESEARCH',
-                'traditional_uses' => ['Decoction for local wellness'],
-                'scientific_evidence' => ['Studied for active phytochemicals']
+                'classification' => 'YES',
+                'evidence_level' => 'ESTABLISHED',
+                'traditional_uses' => ['Decoction for kidney and urinary health'],
+                'scientific_evidence' => ['DOH-PITAHC approved medicinal plant']
             ],
             'safety' => [
                 'safety_category' => 'SAFE_FOR_GENERAL_CONTACT',
@@ -138,12 +155,11 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
                 'status' => 'Least Concern (LC)'
             ],
             'verification' => [
-                'additional_photos_needed' => ['Photograph of flower or fruit for 100% confirmation'],
+                'additional_photos_needed' => ['Crush leaf to confirm camphor aroma or photograph flower for 100% confirmation'],
                 'recommended_checks' => [
-                    'Compare leaf arrangement',
-                    'Check leaf venation',
-                    'Check leaf underside',
-                    'Examine bark',
+                    'Compare leaf margin serrations',
+                    'Check leaf arrangement (Sambong is alternate, Banaba is opposite)',
+                    'Crush leaf to smell distinctive camphor aroma',
                     'Consult qualified botanist or forester'
                 ]
             ],

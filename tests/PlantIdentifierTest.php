@@ -16,12 +16,23 @@ class PlantIdentifierTest extends TestCase
     public function testMockIdentificationForBanaba(): void
     {
         $identifier = new MockPlantIdentifier();
-        $result = $identifier->identifyPlant(['storage/uploads/test_leaf.jpg']);
+        $result = $identifier->identifyPlant(['storage/uploads/banaba_leaf.jpg']);
 
         $this->assertEquals('identified', $result->status);
         $this->assertEquals('Lagerstroemia speciosa', $result->primaryCandidate['scientific_name']);
         $this->assertGreaterThanOrEqual(80.0, $result->confidenceScore);
         $this->assertEquals('High', $result->confidenceLevel);
+    }
+
+    public function testMockIdentificationForSambong(): void
+    {
+        $identifier = new MockPlantIdentifier();
+        $result = $identifier->identifyPlant(['storage/uploads/sambong_leaf.jpg']);
+
+        $this->assertEquals('identified', $result->status);
+        $this->assertEquals('Blumea balsamifera', $result->primaryCandidate['scientific_name']);
+        $this->assertEquals('Sambong', $result->primaryCandidate['common_name']);
+        $this->assertGreaterThanOrEqual(85.0, $result->confidenceScore);
     }
 
     public function testMockIdentificationForPoisonousPlant(): void
@@ -55,8 +66,8 @@ class PlantIdentifierTest extends TestCase
     public function testMultiPhotoConfidenceBoost(): void
     {
         $identifier = new MockPlantIdentifier();
-        $resultSingle = $identifier->identifyPlant(['storage/uploads/leaf.jpg']);
-        $resultMulti = $identifier->identifyPlant(['storage/uploads/leaf.jpg', 'storage/uploads/bark.jpg', 'storage/uploads/flower.jpg']);
+        $resultSingle = $identifier->identifyPlant(['storage/uploads/sambong_leaf.jpg']);
+        $resultMulti = $identifier->identifyPlant(['storage/uploads/sambong_leaf.jpg', 'storage/uploads/bark.jpg', 'storage/uploads/flower.jpg']);
 
         $this->assertGreaterThan($resultSingle->confidenceScore, $resultMulti->confidenceScore);
     }
