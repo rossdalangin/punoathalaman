@@ -11,9 +11,9 @@
                 </p>
             </div>
             <div class="footer-links">
-                <a href="./" data-i18n="nav_home">Home</a> |
-                <a href="educational" data-i18n="nav_learn">Educational Mode</a> |
-                <a href="observations" data-i18n="nav_field">Field Records</a>
+                <a href="index.php" data-i18n="nav_home">Home</a> |
+                <a href="index.php?r=educational" data-i18n="nav_learn">Educational Mode</a> |
+                <a href="index.php?r=observations" data-i18n="nav_field">Field Records</a>
             </div>
         </div>
     </footer>

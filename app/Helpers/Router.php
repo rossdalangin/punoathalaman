@@ -42,17 +42,31 @@ class Router
 
     public function dispatch(string $method, string $uri): void
     {
-        $parsedUrl = parse_url($uri, PHP_URL_PATH) ?? '/';
-
-        // Base path strip for subdirectories (e.g. /punoathalaman/public)
-        $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
-        if ($scriptDir !== '/' && str_starts_with($parsedUrl, $scriptDir)) {
-            $path = substr($parsedUrl, strlen($scriptDir));
+        // Support fallback query parameter routing e.g. index.php?r=admin or ?route=admin
+        if (isset($_GET['r']) || isset($_GET['route'])) {
+            $parsedUrl = '/' . ltrim($_GET['r'] ?? $_GET['route'], '/');
         } else {
-            $path = $parsedUrl;
+            $parsedUrl = parse_url($uri, PHP_URL_PATH) ?? '/';
+
+            // Base path strip for subdirectories (e.g. /punoathalaman/public)
+            $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+            if ($scriptDir !== '/' && str_starts_with($parsedUrl, $scriptDir)) {
+                $pathOnly = substr($parsedUrl, strlen($scriptDir));
+            } else {
+                $pathOnly = $parsedUrl;
+            }
+
+            // Strip index.php if present in path
+            if (str_ends_with($pathOnly, 'index.php')) {
+                $pathOnly = substr($pathOnly, 0, -9);
+            } elseif (str_contains($pathOnly, 'index.php/')) {
+                $pathOnly = str_replace('index.php/', '', $pathOnly);
+            }
+
+            $parsedUrl = $pathOnly;
         }
 
-        $path = rtrim($path, '/') ?: '/';
+        $path = rtrim($parsedUrl, '/') ?: '/';
 
         foreach ($this->routes as $route) {
             if ($route['method'] === strtoupper($method) && preg_match($route['pattern'], $path, $matches)) {
@@ -85,7 +99,7 @@ class Router
             echo json_encode(['error' => 'Endpoint not found', 'path' => $path]);
         } else {
             http_response_code(404);
-            echo "<h1>404 - Pahina Hindi Natagpuan (Page Not Found)</h1>";
+            echo "<h1>404 - Pahina Hindi Natagpuan (Page Not Found)</h1><p>Route: " . htmlspecialchars($path) . "</p>";
         }
     }
 }

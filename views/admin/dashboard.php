@@ -90,7 +90,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
     const fd = new FormData(this);
 
     try {
-        const res = await fetch('/api/auth/login', { method: 'POST', body: fd });
+        const res = await fetch('api/auth/login', { method: 'POST', body: fd });
         const json = await res.json();
         if (json.success) {
             showAdminPanel();
@@ -109,14 +109,14 @@ function showAdminPanel() {
 }
 
 async function logoutAdmin() {
-    await fetch('/api/auth/logout', { method: 'POST' });
+    await fetch('api/auth/logout', { method: 'POST' });
     document.getElementById('admin-login-card').style.display = 'block';
     document.getElementById('admin-panel').style.display = 'none';
 }
 
 async function loadPlantsDirectory() {
     try {
-        const res = await fetch('/api/plants');
+        const res = await fetch('api/plants');
         const data = await res.json();
         const container = document.getElementById('plants-table-container');
 
@@ -150,7 +150,7 @@ document.getElementById('add-plant-form').addEventListener('submit', async funct
     const fd = new FormData(this);
 
     try {
-        const res = await fetch('/api/admin/plants', { method: 'POST', body: fd });
+        const res = await fetch('api/admin/plants', { method: 'POST', body: fd });
         const json = await res.json();
         if (json.success) {
             alert(json.message);

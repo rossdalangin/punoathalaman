@@ -131,10 +131,10 @@ document.getElementById('identify-form').addEventListener('submit', async functi
     const multiInput = document.getElementById('file-input-multi');
 
     const formData = new FormData(this);
-    let endpoint = '/api/identify';
+    let endpoint = 'api/identify';
 
     if (multiInput.files && multiInput.files.length > 1) {
-        endpoint = '/api/identify/multiple';
+        endpoint = 'api/identify/multiple';
     }
 
     document.getElementById('loading-spinner').style.display = 'block';
@@ -243,7 +243,7 @@ function renderResult(data) {
         </div>
 
         <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px;">
-            <a href="/observations" class="btn btn-primary" data-i18n="btn_save_obs">💾 Record Field Observation</a>
+            <a href="index.php?r=observations" class="btn btn-primary" data-i18n="btn_save_obs">💾 Record Field Observation</a>
             <button type="button" class="btn btn-warning" onclick="requestExpertReview(${data.identification_id})" data-i18n="btn_expert_review">👨‍🌾 Request Expert Review</button>
             <button type="button" class="btn btn-outline" onclick="location.reload()" data-i18n="btn_reset">Identify Another Plant</button>
         </div>
@@ -263,7 +263,7 @@ async function requestExpertReview(identId) {
     fd.append('identification_id', identId);
     fd.append('notes', notes);
 
-    const res = await fetch('/api/expert-review', { method: 'POST', body: fd });
+    const res = await fetch('api/expert-review', { method: 'POST', body: fd });
     const json = await res.json();
     alert(json.message || json.error);
 }
