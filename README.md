@@ -53,48 +53,35 @@
 
 ---
 
-## 🚀 Quick Start & Installation
+## 🚀 Installation & Quick Start
 
-### 1. Requirements
-- PHP 8.2 or higher
-- MariaDB / MySQL server
-- Composer
-- PHP extensions: `pdo_mysql`, `fileinfo`, `gd`, `json`
+### ⚠️ Common Error Solution: `vendor/autoload.php missing`
+If you encounter: `Fatal error: Uncaught Error: Failed opening required '.../vendor/autoload.php'`, you need to run `composer install` inside your project root folder to generate the vendor dependencies.
 
-### 2. Environment Setup
-Clone or extract the repository, then copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
+### Windows / XAMPP Installation Instructions
+See detailed step-by-step XAMPP setup guide in [docs/INSTALLATION_XAMPP.md](docs/INSTALLATION_XAMPP.md).
 
-Configure your database credentials in `.env`:
-```ini
-DB_DRIVER=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=puno_at_halaman
-DB_USERNAME=puno_user
-DB_PASSWORD=puno_pass_123
-
-AI_PROVIDER=mock
-AI_API_KEY=your_api_key_here
-```
-
-### 3. Database Initialization & Seeding
-Create the database and run the schema migration and seeder:
-```bash
-mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS puno_at_halaman;"
-mysql -u root -p puno_at_halaman < database/schema.sql
-composer dump-autoload
-php -r "require 'vendor/autoload.php'; App\Helpers\Config::loadEnv('.env'); Database\Seeders\SeedDatabase::run();"
-```
-
-### 4. Running the Development Server
-Start PHP's built-in web server:
-```bash
-php -S 127.0.0.1:8000 -t public
-```
-Navigate to `http://localhost:8000` in your web browser.
+### Linux / macOS / General Installation
+1. **Requirements:** PHP 8.2+, MySQL/MariaDB, Composer.
+2. **Setup `.env`:**
+   ```bash
+   cp .env.example .env
+   ```
+3. **Install Dependencies:**
+   ```bash
+   composer install
+   ```
+4. **Initialize & Seed Database:**
+   ```bash
+   mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS puno_at_halaman;"
+   mysql -u root -p puno_at_halaman < database/schema.sql
+   php -r "require 'vendor/autoload.php'; App\Helpers\Config::loadEnv('.env'); Database\Seeders\SeedDatabase::run();"
+   ```
+5. **Start Web Server:**
+   ```bash
+   php -S 127.0.0.1:8000 -t public
+   ```
+   Navigate to `http://localhost:8000` in your web browser.
 
 ---
 

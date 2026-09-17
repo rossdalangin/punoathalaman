@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/partials/header.php'; ?>
+<?php require_once __DIR__ . '/../partials/header.php'; ?>
 
 <div class="hero-card" style="max-width: 450px; margin: 40px auto; text-align: left;">
     <h2 class="hero-title" style="font-size: 1.5rem; text-align: center;">Mag-login (Login)</h2>
@@ -15,4 +15,4 @@
     </form>
 </div>
 
-<?php require_once __DIR__ . '/partials/footer.php'; ?>
+<?php require_once __DIR__ . '/../partials/footer.php'; ?>
