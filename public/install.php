@@ -75,7 +75,7 @@ DB_HOST={$dbHost}
 DB_PORT={$dbPort}
 DB_DATABASE={$dbName}
 DB_USERNAME={$dbUser}
-DB_PASSWORD="{$dbPass}"
+DB_PASSWORD={$dbPass}
 
 # AI Identifier Configuration
 AI_PROVIDER={$aiProvider}

@@ -6,13 +6,29 @@ class Config
 {
     private static array $config = [];
 
-    public static function loadEnv(string $path): void
+    public static function loadEnv(string $path = ''): void
     {
-        if (!file_exists($path)) {
+        $searchPaths = array_filter([
+            $path,
+            __DIR__ . '/../../.env',
+            __DIR__ . '/../.env',
+            dirname($_SERVER['SCRIPT_FILENAME'] ?? '') . '/.env',
+            dirname($_SERVER['SCRIPT_FILENAME'] ?? '') . '/../.env'
+        ]);
+
+        $envFileToLoad = null;
+        foreach ($searchPaths as $p) {
+            if ($p && file_exists($p)) {
+                $envFileToLoad = $p;
+                break;
+            }
+        }
+
+        if (!$envFileToLoad) {
             return;
         }
 
-        $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $lines = file($envFileToLoad, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         foreach ($lines as $line) {
             $line = trim($line);
             if (empty($line) || str_starts_with($line, '#')) {
@@ -31,6 +47,10 @@ class Config
 
     public static function get(string $key, mixed $default = null): mixed
     {
+        if (empty($_ENV)) {
+            self::loadEnv();
+        }
+
         if (isset($_ENV[$key])) {
             return $_ENV[$key];
         }
