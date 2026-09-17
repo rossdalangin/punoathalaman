@@ -1,9 +1,23 @@
 <?php
 
+// Check Composer autoloader or load fallback autoloader
+$composerAutoload = __DIR__ . '/../vendor/autoload.php';
+if (file_exists($composerAutoload)) {
+    require_once $composerAutoload;
+} else {
+    require_once __DIR__ . '/../app/Helpers/Autoloader.php';
+    \App\Helpers\Autoloader::register();
+}
+
 use App\Helpers\Config;
 use App\Helpers\Router;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+// Check if application is installed
+$lockFile = __DIR__ . '/../storage/installed.lock';
+if (!file_exists($lockFile) && file_exists(__DIR__ . '/install.php')) {
+    header('Location: install.php');
+    exit;
+}
 
 // Load Environment Configuration
 Config::loadEnv(__DIR__ . '/../.env');

@@ -53,40 +53,30 @@
 
 ---
 
-## 🚀 Installation & Quick Start
+## 🧙‍♂️ Zero-Terminal Web Installation Wizard (No Terminal Required!)
 
-### ⚠️ Common Error Solution: `vendor/autoload.php missing`
-If you encounter: `Fatal error: Uncaught Error: Failed opening required '.../vendor/autoload.php'`, you need to run `composer install` inside your project root folder to generate the vendor dependencies.
+You do NOT need terminal access or Composer to install the application.
 
-### Deployment Guides:
-- 📖 [Windows / XAMPP Installation Guide](docs/INSTALLATION_XAMPP.md)
-- 📖 [cPanel Shared Hosting Deployment Guide](docs/INSTALLATION_CPANEL.md)
+### Simple 3-Step Setup:
+1. Upload project files to your web server or XAMPP `htdocs` folder.
+2. Open your web browser and navigate to: `http://localhost/install.php` (or `https://yourdomain.com/install.php`).
+3. Enter your database credentials and click **Install & Seed Application**.
 
-### Linux / macOS / General Installation
-1. **Requirements:** PHP 8.2+, MySQL/MariaDB, Composer.
-2. **Setup `.env`:**
-   ```bash
-   cp .env.example .env
-   ```
-3. **Install Dependencies:**
-   ```bash
-   composer install
-   ```
-4. **Initialize & Seed Database:**
-   ```bash
-   mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS puno_at_halaman;"
-   mysql -u root -p puno_at_halaman < database/schema.sql
-   php -r "require 'vendor/autoload.php'; App\Helpers\Config::loadEnv('.env'); Database\Seeders\SeedDatabase::run();"
-   ```
-5. **Start Web Server:**
-   ```bash
-   php -S 127.0.0.1:8000 -t public
-   ```
-   Navigate to `http://localhost:8000` in your web browser.
+The installer wizard will automatically:
+- Create the MySQL database & tables.
+- Seed the database with Philippine flora records.
+- Generate your `.env` configuration file.
+- **Delete `install.php` automatically** upon completion for security!
 
 ---
 
-## 🧪 Running Automated Tests
+## 📖 Detailed Hosting Guides:
+- 📖 [Windows / XAMPP Installation Guide](docs/INSTALLATION_XAMPP.md)
+- 📖 [cPanel Shared Hosting Deployment Guide](docs/INSTALLATION_CPANEL.md)
+
+---
+
+## 🧪 Running Automated Tests (Developers)
 
 Run the PHPUnit test suite:
 ```bash
@@ -99,6 +89,7 @@ vendor/bin/phpunit tests/PlantIdentifierTest.php
 
 - **Database:** Prepared statements via PDO prevent SQL injection.
 - **Uploads:** MIME-type validation, 10MB file size limits, non-executable upload storage directory, randomized filenames.
+- **Installer Security:** Automated self-deletion of `public/install.php` upon setup completion.
 - **XSS & CSRF:** Output escaping and session CSRF middleware.
 - **API Keys:** Kept strictly server-side in `.env` and never exposed to client-side JavaScript.
 

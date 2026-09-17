@@ -11,13 +11,13 @@
                 </p>
             </div>
             <div class="footer-links">
-                <a href="/" data-i18n="nav_home">Home</a> |
-                <a href="/educational" data-i18n="nav_learn">Educational Mode</a> |
-                <a href="/observations" data-i18n="nav_field">Field Records</a>
+                <a href="./" data-i18n="nav_home">Home</a> |
+                <a href="educational" data-i18n="nav_learn">Educational Mode</a> |
+                <a href="observations" data-i18n="nav_field">Field Records</a>
             </div>
         </div>
     </footer>
 
-    <script src="/assets/js/main.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>

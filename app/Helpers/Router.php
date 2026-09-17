@@ -42,8 +42,17 @@ class Router
 
     public function dispatch(string $method, string $uri): void
     {
-        $parsedUrl = parse_url($uri, PHP_URL_PATH);
-        $path = rtrim($parsedUrl, '/') ?: '/';
+        $parsedUrl = parse_url($uri, PHP_URL_PATH) ?? '/';
+
+        // Base path strip for subdirectories (e.g. /punoathalaman/public)
+        $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+        if ($scriptDir !== '/' && str_starts_with($parsedUrl, $scriptDir)) {
+            $path = substr($parsedUrl, strlen($scriptDir));
+        } else {
+            $path = $parsedUrl;
+        }
+
+        $path = rtrim($path, '/') ?: '/';
 
         foreach ($this->routes as $route) {
             if ($route['method'] === strtoupper($method) && preg_match($route['pattern'], $path, $matches)) {
@@ -70,7 +79,7 @@ class Router
         }
 
         // 404 Not Found
-        if (str_starts_with($path, '/api/')) {
+        if (str_contains($path, '/api/')) {
             header('Content-Type: application/json');
             http_response_code(404);
             echo json_encode(['error' => 'Endpoint not found', 'path' => $path]);
