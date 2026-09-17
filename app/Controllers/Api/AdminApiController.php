@@ -198,7 +198,28 @@ class AdminApiController
                 $_POST['growth_habit'] ?? null
             ]);
 
-            $plantId = $pdo->lastInsertId();
+            $plantId = (int)$pdo->lastInsertId();
+
+            // Insert initial default relations if provided
+            if (!empty($_POST['image_path'])) {
+                $stmtImg = $pdo->prepare("INSERT INTO plant_images (plant_id, file_path, original_filename, image_type) VALUES (?, ?, ?, 'leaf')");
+                $stmtImg->execute([$plantId, trim($_POST['image_path']), basename(trim($_POST['image_path']))]);
+            }
+
+            $stmtName = $pdo->prepare("INSERT INTO plant_names (plant_id, name, name_type, language_region) VALUES (?, ?, 'tagalog', 'National')");
+            $stmtName->execute([$plantId, $commonName]);
+
+            // Default medicinal info structure
+            $stmtMed = $pdo->prepare("INSERT INTO plant_medicinal_information (plant_id, is_recognized_medicinal, traditional_uses_text, scientific_evidence_text) VALUES (?, 'TRADITIONALLY_USED', 'Traditionally used.', 'Evidence being researched.')");
+            $stmtMed->execute([$plantId]);
+
+            // Default safety structure
+            $stmtSafe = $pdo->prepare("INSERT INTO plant_safety (plant_id, safety_category, primary_warning) VALUES (?, 'SAFE_FOR_GENERAL_CONTACT', 'Verify identification before consumption.')");
+            $stmtSafe->execute([$plantId]);
+
+            // Default conservation
+            $stmtCons = $pdo->prepare("INSERT INTO plant_conservation (plant_id, iucn_status, denr_status) VALUES (?, 'Least Concern (LC)', 'Not Listed')");
+            $stmtCons->execute([$plantId]);
 
             echo json_encode([
                 'success' => true,
@@ -219,27 +240,232 @@ class AdminApiController
             $pdo = Database::getConnection();
             $rawInput = file_get_contents('php://input');
             $data = json_decode($rawInput, true) ?: $_POST;
+            $plantId = (int)$id;
 
+            if (!$plantId) {
+                throw new Exception("Valid plant ID required.");
+            }
+
+            // 1. Update Core Plants Table
             $stmt = $pdo->prepare("
                 UPDATE plants SET
+                    scientific_name = COALESCE(?, scientific_name),
                     primary_common_name = COALESCE(?, primary_common_name),
                     family = COALESCE(?, family),
+                    genus = COALESCE(?, genus),
+                    species = COALESCE(?, species),
                     native_status = COALESCE(?, native_status),
                     habitat = COALESCE(?, habitat),
-                    philippine_distribution = COALESCE(?, philippine_distribution)
+                    philippine_distribution = COALESCE(?, philippine_distribution),
+                    growth_habit = COALESCE(?, growth_habit),
+                    distinctive_markings = COALESCE(?, distinctive_markings)
                 WHERE id = ?
             ");
 
             $stmt->execute([
+                $data['scientific_name'] ?? null,
                 $data['primary_common_name'] ?? null,
                 $data['family'] ?? null,
+                $data['genus'] ?? null,
+                $data['species'] ?? null,
                 $data['native_status'] ?? null,
                 $data['habitat'] ?? null,
                 $data['philippine_distribution'] ?? null,
-                (int)$id
+                $data['growth_habit'] ?? null,
+                $data['distinctive_markings'] ?? null,
+                $plantId
             ]);
 
-            echo json_encode(['success' => true, 'message' => 'Plant updated successfully.']);
+            // 2. Update Medicinal Information if provided
+            if (isset($data['medicinal'])) {
+                $med = $data['medicinal'];
+                $stmtMed = $pdo->prepare("
+                    INSERT INTO plant_medicinal_information (
+                        plant_id, is_recognized_medicinal, traditional_uses_text, scientific_evidence_text,
+                        active_compounds, known_risks, known_interactions, toxic_parts, preparation_risks
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ON DUPLICATE KEY UPDATE
+                        is_recognized_medicinal = VALUES(is_recognized_medicinal),
+                        traditional_uses_text = VALUES(traditional_uses_text),
+                        scientific_evidence_text = VALUES(scientific_evidence_text),
+                        active_compounds = VALUES(active_compounds),
+                        known_risks = VALUES(known_risks),
+                        known_interactions = VALUES(known_interactions),
+                        toxic_parts = VALUES(toxic_parts),
+                        preparation_risks = VALUES(preparation_risks)
+                ");
+                $stmtMed->execute([
+                    $plantId,
+                    $med['is_recognized_medicinal'] ?? 'TRADITIONALLY_USED',
+                    $med['traditional_uses_text'] ?? null,
+                    $med['scientific_evidence_text'] ?? null,
+                    $med['active_compounds'] ?? null,
+                    $med['known_risks'] ?? null,
+                    $med['known_interactions'] ?? null,
+                    $med['toxic_parts'] ?? null,
+                    $med['preparation_risks'] ?? null
+                ]);
+            }
+
+            // 3. Update Safety Information if provided
+            if (isset($data['safety'])) {
+                $safe = $data['safety'];
+                $stmtSafe = $pdo->prepare("
+                    INSERT INTO plant_safety (
+                        plant_id, safety_category, primary_warning, toxic_parts,
+                        look_alike_species, look_alike_distinction, warning_text
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                    ON DUPLICATE KEY UPDATE
+                        safety_category = VALUES(safety_category),
+                        primary_warning = VALUES(primary_warning),
+                        toxic_parts = VALUES(toxic_parts),
+                        look_alike_species = VALUES(look_alike_species),
+                        look_alike_distinction = VALUES(look_alike_distinction),
+                        warning_text = VALUES(warning_text)
+                ");
+                $stmtSafe->execute([
+                    $plantId,
+                    $safe['safety_category'] ?? 'SAFE_FOR_GENERAL_CONTACT',
+                    $safe['primary_warning'] ?? null,
+                    $safe['toxic_parts'] ?? null,
+                    $safe['look_alike_species'] ?? null,
+                    $safe['look_alike_distinction'] ?? null,
+                    $safe['warning_text'] ?? null
+                ]);
+            }
+
+            // 4. Update Conservation Information if provided
+            if (isset($data['conservation'])) {
+                $cons = $data['conservation'];
+                $stmtCons = $pdo->prepare("
+                    INSERT INTO plant_conservation (
+                        plant_id, iucn_status, denr_status, threatened_status, protected_status, collection_restrictions
+                    ) VALUES (?, ?, ?, ?, ?, ?)
+                    ON DUPLICATE KEY UPDATE
+                        iucn_status = VALUES(iucn_status),
+                        denr_status = VALUES(denr_status),
+                        threatened_status = VALUES(threatened_status),
+                        protected_status = VALUES(protected_status),
+                        collection_restrictions = VALUES(collection_restrictions)
+                ");
+                $stmtCons->execute([
+                    $plantId,
+                    $cons['iucn_status'] ?? 'Least Concern (LC)',
+                    $cons['denr_status'] ?? 'Not Listed',
+                    $cons['threatened_status'] ?? 'Safe',
+                    $cons['protected_status'] ?? 'Not Protected',
+                    $cons['collection_restrictions'] ?? null
+                ]);
+            }
+
+            echo json_encode(['success' => true, 'message' => 'Plant record updated successfully.']);
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function deletePlant(string $id): void
+    {
+        header('Content-Type: application/json');
+
+        try {
+            $pdo = Database::getConnection();
+            $plantId = (int)$id;
+
+            if (!$plantId) {
+                throw new Exception("Valid plant ID required.");
+            }
+
+            $stmt = $pdo->prepare("DELETE FROM plants WHERE id = ?");
+            $stmt->execute([$plantId]);
+
+            echo json_encode(['success' => true, 'message' => "Plant species #{$plantId} deleted."]);
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function addPlantAlias(string $plantId): void
+    {
+        header('Content-Type: application/json');
+
+        try {
+            $pdo = Database::getConnection();
+            $id = (int)$plantId;
+            $name = trim($_POST['name'] ?? '');
+            $type = trim($_POST['name_type'] ?? 'local');
+            $region = trim($_POST['language_region'] ?? 'Philippines');
+
+            if (empty($name)) {
+                throw new Exception("Alias name is required.");
+            }
+
+            $stmt = $pdo->prepare("INSERT INTO plant_names (plant_id, name, name_type, language_region, verified_status) VALUES (?, ?, ?, ?, 'verified')");
+            $stmt->execute([$id, $name, $type, $region]);
+
+            echo json_encode(['success' => true, 'message' => "Alias '{$name}' added to plant."]);
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function deletePlantAlias(string $aliasId): void
+    {
+        header('Content-Type: application/json');
+
+        try {
+            $pdo = Database::getConnection();
+            $id = (int)$aliasId;
+
+            $stmt = $pdo->prepare("DELETE FROM plant_names WHERE id = ?");
+            $stmt->execute([$id]);
+
+            echo json_encode(['success' => true, 'message' => "Alias removed."]);
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function addPlantImage(string $plantId): void
+    {
+        header('Content-Type: application/json');
+
+        try {
+            $pdo = Database::getConnection();
+            $id = (int)$plantId;
+            $filePath = trim($_POST['file_path'] ?? '');
+            $type = trim($_POST['image_type'] ?? 'leaf');
+
+            if (empty($filePath)) {
+                throw new Exception("Image file path or URL is required.");
+            }
+
+            $stmt = $pdo->prepare("INSERT INTO plant_images (plant_id, file_path, original_filename, image_type) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$id, $filePath, basename($filePath), $type]);
+
+            echo json_encode(['success' => true, 'message' => "Image added to species record."]);
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function deletePlantImage(string $imageId): void
+    {
+        header('Content-Type: application/json');
+
+        try {
+            $pdo = Database::getConnection();
+            $id = (int)$imageId;
+
+            $stmt = $pdo->prepare("DELETE FROM plant_images WHERE id = ?");
+            $stmt->execute([$id]);
+
+            echo json_encode(['success' => true, 'message' => "Image removed."]);
         } catch (Exception $e) {
             http_response_code(400);
             echo json_encode(['error' => $e->getMessage()]);

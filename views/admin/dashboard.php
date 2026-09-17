@@ -4,7 +4,7 @@
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
         <div>
             <h1 class="hero-title" style="margin-bottom:4px;">Control Center & Expert Review Dashboard</h1>
-            <p class="hero-subtitle" style="margin-bottom:0;">Manage Philippine flora database, review pending user identifications, and monitor system metrics.</p>
+            <p class="hero-subtitle" style="margin-bottom:0;">Manage Philippine flora database, edit medicinal and safety attributes, curate images, review pending identifications, and configure system AI parameters.</p>
         </div>
         <div id="admin-auth-header" style="display:none;">
             <button type="button" onclick="logoutAdmin()" class="btn btn-outline btn-sm">🔒 Logout Admin</button>
@@ -66,25 +66,27 @@
 
     <!-- Navigation Tabs -->
     <div class="admin-tabs">
-        <button type="button" class="tab-btn active" onclick="switchAdminTab('tab-species', this)">🌱 Species Directory</button>
+        <button type="button" class="tab-btn active" onclick="switchAdminTab('tab-species', this)">🌱 Species Directory & Management</button>
         <button type="button" class="tab-btn" onclick="switchAdminTab('tab-add-plant', this)">➕ Add New Species</button>
         <button type="button" class="tab-btn" onclick="switchAdminTab('tab-reviews', this)">👨‍🌾 Expert Review Queue</button>
         <button type="button" class="tab-btn" onclick="switchAdminTab('tab-settings', this)">⚙️ System Settings</button>
         <button type="button" class="tab-btn" onclick="switchAdminTab('tab-sources', this)">📚 Sources & References</button>
     </div>
 
-    <!-- TAB 1: Species Directory -->
+    <!-- TAB 1: Species Directory & Management -->
     <div id="tab-species" class="tab-content active">
         <div class="hero-card" style="padding:20px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
                 <h3 class="section-title" style="margin-bottom:0;">Registered Species Directory</h3>
-                <input type="text" id="species-search" class="form-control" style="width:250px;" placeholder="Search species..." onkeyup="filterSpeciesTable()">
+                <div style="display:flex; gap:8px;">
+                    <input type="text" id="species-search" class="form-control" style="width:250px;" placeholder="Search common/scientific/alias..." onkeyup="filterSpeciesTable()">
+                </div>
             </div>
             <div class="table-responsive">
                 <table class="data-table" id="species-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Image</th>
                             <th>Common Name</th>
                             <th>Scientific Name</th>
                             <th>Family</th>
@@ -132,9 +134,15 @@
                             <option value="NATIVE">NATIVE</option>
                             <option value="ENDEMIC">ENDEMIC</option>
                             <option value="INTRODUCED">INTRODUCED</option>
+                            <option value="NATURALIZED">NATURALIZED</option>
                             <option value="INVASIVE">INVASIVE</option>
+                            <option value="CULTIVATED">CULTIVATED</option>
                         </select>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label>Default Image Relative Path / URL:</label>
+                    <input type="text" name="image_path" class="form-control" placeholder="e.g. assets/images/species/tsaang_gubat.jpg">
                 </div>
                 <div class="form-group">
                     <label>Habitat Description:</label>
@@ -247,6 +255,180 @@
 
 </div>
 
+<!-- EDIT SPECIES MODAL DRAWER -->
+<div id="edit-plant-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; overflow-y:auto; padding:20px;">
+    <div style="background:#fff; max-width:900px; margin:40px auto; padding:25px; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.3); position:relative;">
+        <button type="button" onclick="closeEditModal()" style="position:absolute; top:15px; right:20px; border:none; background:none; font-size:1.5rem; cursor:pointer;">✖</button>
+        <h2 style="color:var(--primary-dark); margin-bottom:16px;">🌿 Edit Species Profile: <span id="modal-species-title"></span></h2>
+
+        <!-- Modal Inner Tabs -->
+        <div class="admin-tabs" style="margin-bottom:15px;">
+            <button type="button" class="tab-btn active" onclick="switchModalTab('modal-tab-general', this)">Taxonomy & Habitat</button>
+            <button type="button" class="tab-btn" onclick="switchModalTab('modal-tab-medicinal', this)">Medicinal Properties</button>
+            <button type="button" class="tab-btn" onclick="switchModalTab('modal-tab-safety', this)">Safety & Warnings</button>
+            <button type="button" class="tab-btn" onclick="switchModalTab('modal-tab-aliases', this)">Aliases / Local Names</button>
+            <button type="button" class="tab-btn" onclick="switchModalTab('modal-tab-images', this)">Reference Images</button>
+        </div>
+
+        <form id="edit-plant-form">
+            <input type="hidden" id="edit-plant-id" name="plant_id">
+
+            <!-- Modal Tab 1: Taxonomy -->
+            <div id="modal-tab-general" class="modal-subtab active">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Scientific Name:</label>
+                        <input type="text" id="edit-scientific-name" name="scientific_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Primary Common Name:</label>
+                        <input type="text" id="edit-common-name" name="primary_common_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Family:</label>
+                        <input type="text" id="edit-family" name="family" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Genus:</label>
+                        <input type="text" id="edit-genus" name="genus" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Species:</label>
+                        <input type="text" id="edit-species" name="species" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Native Status:</label>
+                        <select id="edit-native-status" name="native_status" class="form-control">
+                            <option value="NATIVE">NATIVE</option>
+                            <option value="ENDEMIC">ENDEMIC</option>
+                            <option value="INTRODUCED">INTRODUCED</option>
+                            <option value="NATURALIZED">NATURALIZED</option>
+                            <option value="INVASIVE">INVASIVE</option>
+                            <option value="CULTIVATED">CULTIVATED</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Habitat Description:</label>
+                    <textarea id="edit-habitat" name="habitat" class="form-control" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Philippine Regional Distribution:</label>
+                    <textarea id="edit-distribution" name="philippine_distribution" class="form-control" rows="2"></textarea>
+                </div>
+            </div>
+
+            <!-- Modal Tab 2: Medicinal -->
+            <div id="modal-tab-medicinal" class="modal-subtab" style="display:none;">
+                <div class="form-group">
+                    <label>Recognized Medicinal Status:</label>
+                    <select id="edit-med-status" class="form-control">
+                        <option value="YES">YES (DOH / PITAHC Recognized)</option>
+                        <option value="TRADITIONALLY_USED">TRADITIONALLY_USED</option>
+                        <option value="POTENTIAL">POTENTIAL / UNDER RESEARCH</option>
+                        <option value="NO_RELIABLE_USE">NO RELIABLE MEDICINAL USE</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Traditional Ethnobotanical Uses:</label>
+                    <textarea id="edit-med-traditional" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Scientifically Established Evidence:</label>
+                    <textarea id="edit-med-scientific" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Known Active Phytochemical Compounds:</label>
+                    <input type="text" id="edit-med-compounds" class="form-control" placeholder="e.g. Corosolic acid, quercetin, tannins">
+                </div>
+                <div class="form-group">
+                    <label>Known Risks & Preparation Precautions:</label>
+                    <input type="text" id="edit-med-risks" class="form-control">
+                </div>
+            </div>
+
+            <!-- Modal Tab 3: Safety -->
+            <div id="modal-tab-safety" class="modal-subtab" style="display:none;">
+                <div class="form-group">
+                    <label>Safety Classification Category:</label>
+                    <select id="edit-safety-category" class="form-control">
+                        <option value="SAFE_FOR_GENERAL_CONTACT">SAFE FOR GENERAL CONTACT</option>
+                        <option value="CAUTION">CAUTION</option>
+                        <option value="POTENTIALLY_TOXIC">POTENTIALLY TOXIC</option>
+                        <option value="KNOWN_POISONOUS_PLANT">KNOWN POISONOUS PLANT</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Primary Safety Warning Banner:</label>
+                    <textarea id="edit-safety-warning" class="form-control" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Toxic Parts (if applicable):</label>
+                    <input type="text" id="edit-safety-toxic" class="form-control" placeholder="e.g. Seeds, concentrated sap">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Look-alike Species Name:</label>
+                        <input type="text" id="edit-safety-lookalike" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Look-alike Diagnostic Distinction:</label>
+                        <input type="text" id="edit-safety-distinction" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Tab 4: Aliases -->
+            <div id="modal-tab-aliases" class="modal-subtab" style="display:none;">
+                <div id="aliases-list-container" style="margin-bottom:15px;"></div>
+                <div style="background:#f4f8f5; padding:15px; border-radius:8px;">
+                    <h4 style="margin-top:0; font-size:0.95rem;">➕ Add Regional / Dialect Alias Name</h4>
+                    <div class="grid-2">
+                        <input type="text" id="new-alias-name" class="form-control" placeholder="Alias Name (e.g. Subusub)">
+                        <select id="new-alias-type" class="form-control">
+                            <option value="tagalog">Tagalog</option>
+                            <option value="english">English</option>
+                            <option value="local">Local Dialect</option>
+                            <option value="regional">Regional Name</option>
+                        </select>
+                    </div>
+                    <div style="margin-top:8px; display:flex; gap:10px;">
+                        <input type="text" id="new-alias-region" class="form-control" placeholder="Region / Language (e.g. Ilocos, Visayas)">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="addAliasRecord()">Add Alias</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Tab 5: Images -->
+            <div id="modal-tab-images" class="modal-subtab" style="display:none;">
+                <div id="images-list-container" style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:15px;"></div>
+                <div style="background:#f4f8f5; padding:15px; border-radius:8px;">
+                    <h4 style="margin-top:0; font-size:0.95rem;">🖼️ Attach Reference Image URL / Path</h4>
+                    <div class="grid-2">
+                        <input type="text" id="new-image-path" class="form-control" placeholder="Path/URL e.g. assets/images/species/bayabas.jpg">
+                        <select id="new-image-type" class="form-control">
+                            <option value="leaf">Leaf</option>
+                            <option value="flower">Flower</option>
+                            <option value="fruit">Fruit</option>
+                            <option value="bark">Bark</option>
+                            <option value="whole_plant">Whole Plant</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" onclick="addImageRecord()">Attach Image</button>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:25px; padding-top:15px; border-top:1px solid #eee;">
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteSpeciesProfile()">🗑️ Delete Species</button>
+                <div style="display:flex; gap:10px;">
+                    <button type="button" class="btn btn-outline" onclick="closeEditModal()">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveSpeciesProfile()">💾 Save All Changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
 function getApiUrl(endpoint) {
     return 'index.php?r=' + endpoint.replace(/^\/+/, '');
@@ -256,6 +438,13 @@ function switchAdminTab(tabId, btn) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
+    btn.classList.add('active');
+}
+
+function switchModalTab(tabId, btn) {
+    document.querySelectorAll('.modal-subtab').forEach(t => t.style.display = 'none');
+    document.querySelectorAll('#edit-plant-modal .tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).style.display = 'block';
     btn.classList.add('active');
 }
 
@@ -322,15 +511,16 @@ async function loadPlantsDirectory() {
 
         let html = '';
         data.plants.forEach(p => {
+            const imgThumb = p.main_image ? `<img src="${p.main_image}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">` : '🌿';
             html += `
                 <tr>
-                    <td>#${p.id}</td>
+                    <td>${imgThumb}</td>
                     <td><strong>${p.primary_common_name}</strong></td>
                     <td><em>${p.scientific_name}</em></td>
                     <td>${p.family}</td>
                     <td><span class="badge badge-success">${p.native_status}</span></td>
                     <td>
-                        <button class="btn btn-outline btn-sm" onclick="alert('Viewing record #${p.id}')">🔍 View Details</button>
+                        <button class="btn btn-outline btn-sm" onclick="openEditModal(${p.id})">✏️ Edit Profile</button>
                     </td>
                 </tr>
             `;
@@ -347,6 +537,213 @@ function filterSpeciesTable() {
     rows.forEach(r => {
         r.style.display = r.innerText.toLowerCase().includes(query) ? '' : 'none';
     });
+}
+
+async function openEditModal(plantId) {
+    try {
+        const res = await fetch(getApiUrl('api/plants/' + plantId));
+        const json = await res.json();
+        if (!json.plant) {
+            alert('Species record not found');
+            return;
+        }
+
+        const p = json.plant;
+        document.getElementById('edit-plant-id').value = p.id;
+        document.getElementById('modal-species-title').innerText = p.primary_common_name + ' (' + p.scientific_name + ')';
+
+        // General Taxonomy
+        document.getElementById('edit-scientific-name').value = p.scientific_name || '';
+        document.getElementById('edit-common-name').value = p.primary_common_name || '';
+        document.getElementById('edit-family').value = p.family || '';
+        document.getElementById('edit-genus').value = p.genus || '';
+        document.getElementById('edit-species').value = p.species || '';
+        document.getElementById('edit-native-status').value = p.native_status || 'NATIVE';
+        document.getElementById('edit-habitat').value = p.habitat || '';
+        document.getElementById('edit-distribution').value = p.philippine_distribution || '';
+
+        // Medicinal
+        if (p.medicinal) {
+            document.getElementById('edit-med-status').value = p.medicinal.is_recognized_medicinal || 'TRADITIONALLY_USED';
+            document.getElementById('edit-med-traditional').value = p.medicinal.traditional_uses_text || '';
+            document.getElementById('edit-med-scientific').value = p.medicinal.scientific_evidence_text || '';
+            document.getElementById('edit-med-compounds').value = p.medicinal.active_compounds || '';
+            document.getElementById('edit-med-risks').value = p.medicinal.known_risks || '';
+        }
+
+        // Safety
+        if (p.safety) {
+            document.getElementById('edit-safety-category').value = p.safety.safety_category || 'SAFE_FOR_GENERAL_CONTACT';
+            document.getElementById('edit-safety-warning').value = p.safety.primary_warning || '';
+            document.getElementById('edit-safety-toxic').value = p.safety.toxic_parts || '';
+            document.getElementById('edit-safety-lookalike').value = p.safety.look_alike_species || '';
+            document.getElementById('edit-safety-distinction').value = p.safety.look_alike_distinction || '';
+        }
+
+        // Render Aliases
+        renderAliasesList(p.names || []);
+
+        // Render Images
+        renderImagesList(p.images || []);
+
+        document.getElementById('edit-plant-modal').style.display = 'block';
+    } catch (err) {
+        alert('Failed to load species profile: ' + err.message);
+    }
+}
+
+function closeEditModal() {
+    document.getElementById('edit-plant-modal').style.display = 'none';
+}
+
+function renderAliasesList(names) {
+    const container = document.getElementById('aliases-list-container');
+    if (!names || names.length === 0) {
+        container.innerHTML = '<p style="color:#777; font-size:0.9rem;">No secondary aliases recorded yet.</p>';
+        return;
+    }
+    let html = '<div style="display:flex; flex-wrap:wrap; gap:8px;">';
+    names.forEach(n => {
+        html += `<span class="badge badge-info" style="display:inline-flex; align-items:center; gap:6px;">
+            ${n.name} (${n.language_region || n.name_type})
+            <button type="button" onclick="deleteAliasRecord(${n.id})" style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;">×</button>
+        </span>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function renderImagesList(images) {
+    const container = document.getElementById('images-list-container');
+    if (!images || images.length === 0) {
+        container.innerHTML = '<p style="color:#777; font-size:0.9rem;">No reference images attached yet.</p>';
+        return;
+    }
+    let html = '';
+    images.forEach(img => {
+        html += `<div style="border:1px solid #ddd; padding:8px; border-radius:8px; text-align:center; width:120px;">
+            <img src="${img.file_path}" style="width:100px; height:80px; object-fit:cover; border-radius:4px; display:block; margin:0 auto 6px;">
+            <span style="font-size:0.75rem; color:#555; text-transform:uppercase;">${img.image_type}</span>
+            <button type="button" onclick="deleteImageRecord(${img.id})" class="btn btn-danger btn-sm" style="font-size:0.7rem; padding:2px 6px; margin-top:4px;">Remove</button>
+        </div>`;
+    });
+    container.innerHTML = html;
+}
+
+async function saveSpeciesProfile() {
+    const plantId = document.getElementById('edit-plant-id').value;
+    const payload = {
+        scientific_name: document.getElementById('edit-scientific-name').value,
+        primary_common_name: document.getElementById('edit-common-name').value,
+        family: document.getElementById('edit-family').value,
+        genus: document.getElementById('edit-genus').value,
+        species: document.getElementById('edit-species').value,
+        native_status: document.getElementById('edit-native-status').value,
+        habitat: document.getElementById('edit-habitat').value,
+        philippine_distribution: document.getElementById('edit-distribution').value,
+        medicinal: {
+            is_recognized_medicinal: document.getElementById('edit-med-status').value,
+            traditional_uses_text: document.getElementById('edit-med-traditional').value,
+            scientific_evidence_text: document.getElementById('edit-med-scientific').value,
+            active_compounds: document.getElementById('edit-med-compounds').value,
+            known_risks: document.getElementById('edit-med-risks').value
+        },
+        safety: {
+            safety_category: document.getElementById('edit-safety-category').value,
+            primary_warning: document.getElementById('edit-safety-warning').value,
+            toxic_parts: document.getElementById('edit-safety-toxic').value,
+            look_alike_species: document.getElementById('edit-safety-lookalike').value,
+            look_alike_distinction: document.getElementById('edit-safety-distinction').value
+        }
+    };
+
+    try {
+        const res = await fetch(getApiUrl('api/admin/plants/' + plantId), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+            alert('Species profile updated successfully!');
+            closeEditModal();
+            loadPlantsDirectory();
+        } else {
+            alert('Update error: ' + (json.error || 'Failed to save changes'));
+        }
+    } catch (err) {
+        alert('Network error: ' + err.message);
+    }
+}
+
+async function deleteSpeciesProfile() {
+    const plantId = document.getElementById('edit-plant-id').value;
+    if (!confirm('Are you sure you want to permanently delete this plant species profile?')) return;
+
+    try {
+        const res = await fetch(getApiUrl('api/admin/plants/' + plantId), { method: 'DELETE' });
+        const json = await res.json();
+        alert(json.message || json.error);
+        closeEditModal();
+        loadPlantsDirectory();
+        loadDashboardStats();
+    } catch (err) {
+        alert('Delete failed: ' + err.message);
+    }
+}
+
+async function addAliasRecord() {
+    const plantId = document.getElementById('edit-plant-id').value;
+    const name = document.getElementById('new-alias-name').value;
+    const type = document.getElementById('new-alias-type').value;
+    const region = document.getElementById('new-alias-region').value;
+
+    if (!name) { alert('Enter an alias name'); return; }
+
+    const fd = new FormData();
+    fd.append('name', name);
+    fd.append('name_type', type);
+    fd.append('language_region', region);
+
+    const res = await fetch(getApiUrl('api/admin/plants/' + plantId + '/alias'), { method: 'POST', body: fd });
+    const json = await res.json();
+    if (json.success) {
+        document.getElementById('new-alias-name').value = '';
+        openEditModal(plantId);
+    }
+}
+
+async function deleteAliasRecord(aliasId) {
+    const plantId = document.getElementById('edit-plant-id').value;
+    const res = await fetch(getApiUrl('api/admin/alias/' + aliasId), { method: 'DELETE' });
+    const json = await res.json();
+    if (json.success) openEditModal(plantId);
+}
+
+async function addImageRecord() {
+    const plantId = document.getElementById('edit-plant-id').value;
+    const path = document.getElementById('new-image-path').value;
+    const type = document.getElementById('new-image-type').value;
+
+    if (!path) { alert('Enter image path/URL'); return; }
+
+    const fd = new FormData();
+    fd.append('file_path', path);
+    fd.append('image_type', type);
+
+    const res = await fetch(getApiUrl('api/admin/plants/' + plantId + '/image'), { method: 'POST', body: fd });
+    const json = await res.json();
+    if (json.success) {
+        document.getElementById('new-image-path').value = '';
+        openEditModal(plantId);
+    }
+}
+
+async function deleteImageRecord(imageId) {
+    const plantId = document.getElementById('edit-plant-id').value;
+    const res = await fetch(getApiUrl('api/admin/image/' + imageId), { method: 'DELETE' });
+    const json = await res.json();
+    if (json.success) openEditModal(plantId);
 }
 
 async function loadAdminSettings() {

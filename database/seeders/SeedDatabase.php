@@ -25,6 +25,7 @@ class SeedDatabase
         $pdo->exec("TRUNCATE TABLE plant_safety;");
         $pdo->exec("TRUNCATE TABLE plant_medicinal_information;");
         $pdo->exec("TRUNCATE TABLE plant_uses;");
+        $pdo->exec("TRUNCATE TABLE plant_images;");
         $pdo->exec("TRUNCATE TABLE plant_names;");
         $pdo->exec("TRUNCATE TABLE plants;");
         $pdo->exec("SET FOREIGN_KEY_CHECKS = 1;");
@@ -53,6 +54,11 @@ class SeedDatabase
                 'flower_description' => 'Showy pink to purple petals with crinkled edges in large terminal panicles.',
                 'fruit_description' => 'Woody capsule, subglobose, containing winged seeds.',
                 'distinctive_markings' => 'Reddish leaves before shedding; crinkled purple/pink petals.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/banaba_leaf.jpg', 'filename' => 'banaba_leaf.jpg', 'type' => 'leaf'],
+                    ['file_path' => 'assets/images/species/banaba_flower.jpg', 'filename' => 'banaba_flower.jpg', 'type' => 'flower'],
+                    ['file_path' => 'assets/images/species/banaba_tree.jpg', 'filename' => 'banaba_tree.jpg', 'type' => 'whole_plant']
+                ],
                 'names' => [
                     ['name' => 'Banaba', 'type' => 'tagalog', 'region' => 'Luzon/Tagalog'],
                     ['name' => 'Pride of India', 'type' => 'english', 'region' => 'International'],
@@ -121,6 +127,10 @@ class SeedDatabase
                 'flower_description' => 'Yellow head flowers grouped in dense terminal panicles.',
                 'fruit_description' => 'Small achenes with hair-like pappus for wind dispersal.',
                 'distinctive_markings' => 'Strong camphor aromatic smell when leaves are crushed; soft velvety hairy texture.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/sambong_leaf.jpg', 'filename' => 'sambong_leaf.jpg', 'type' => 'leaf'],
+                    ['file_path' => 'assets/images/species/sambong_flower.jpg', 'filename' => 'sambong_flower.jpg', 'type' => 'flower']
+                ],
                 'names' => [
                     ['name' => 'Sambong', 'type' => 'tagalog', 'region' => 'National'],
                     ['name' => 'Blumea Camphor', 'type' => 'english', 'region' => 'International'],
@@ -188,6 +198,10 @@ class SeedDatabase
                 'flower_description' => 'Small bluish-purple to pale violet flowers arranged in branched terminal thyrses.',
                 'fruit_description' => 'Small succulent black or purple drupe, subglobose.',
                 'distinctive_markings' => 'Palmate 3-5 leaflet arrangement with whitish hairy underside and aromatic crushed leaves.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/lagundi_leaf.jpg', 'filename' => 'lagundi_leaf.jpg', 'type' => 'leaf'],
+                    ['file_path' => 'assets/images/species/lagundi_flower.jpg', 'filename' => 'lagundi_flower.jpg', 'type' => 'flower']
+                ],
                 'names' => [
                     ['name' => 'Lagundi', 'type' => 'tagalog', 'region' => 'National'],
                     ['name' => 'Five-leaved Chaste Tree', 'type' => 'english', 'region' => 'International'],
@@ -255,6 +269,10 @@ class SeedDatabase
                 'flower_description' => 'Fragrant yellow panicles blooming profusely in short bursts during early dry season.',
                 'fruit_description' => 'Disc-like orbicular pod with a central woody seed surrounded by a papery wing (samara).',
                 'distinctive_markings' => 'Red liquid exuded from cut bark (dragon blood sap); winged disc fruit pods; national tree of the Philippines.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/narra_tree.jpg', 'filename' => 'narra_tree.jpg', 'type' => 'whole_plant'],
+                    ['file_path' => 'assets/images/species/narra_leaf.jpg', 'filename' => 'narra_leaf.jpg', 'type' => 'leaf']
+                ],
                 'names' => [
                     ['name' => 'Narra', 'type' => 'tagalog', 'region' => 'National'],
                     ['name' => 'Pterocarpus / Malay Padauk', 'type' => 'english', 'region' => 'International'],
@@ -322,6 +340,9 @@ class SeedDatabase
                 'flower_description' => 'Large white showy flowers (10-15cm wide) with red central carpels and stamens.',
                 'fruit_description' => 'Globose edible fruit enclosed by fleshy persistent thick green sepals; sour citrus flavor.',
                 'distinctive_markings' => 'Filipino endemic species featured on the 25-centimo coin; distinct sour edible segmented fruit.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/katmon_fruit.jpg', 'filename' => 'katmon_fruit.jpg', 'type' => 'fruit']
+                ],
                 'names' => [
                     ['name' => 'Katmon', 'type' => 'tagalog', 'region' => 'National'],
                     ['name' => 'Elephant Apple (Philippine)', 'type' => 'english', 'region' => 'International'],
@@ -389,6 +410,9 @@ class SeedDatabase
                 'flower_description' => 'Bright yellow erect candle-like spikes (terminal racemes).',
                 'fruit_description' => 'Straight papery pod with prominent longitudinal wings containing flat triangular seeds.',
                 'distinctive_markings' => 'Bright golden candle-shaped flower spikes; winged pods; crushed leaf antifungal remedy.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/akapulko_flower.jpg', 'filename' => 'akapulko_flower.jpg', 'type' => 'flower']
+                ],
                 'names' => [
                     ['name' => 'Akapulko', 'type' => 'tagalog', 'region' => 'National'],
                     ['name' => 'Ringworm Bush / Candle Bush', 'type' => 'english', 'region' => 'International'],
@@ -456,6 +480,9 @@ class SeedDatabase
                 'flower_description' => 'Small white 5-lobed star-shaped flowers in axillary cymes.',
                 'fruit_description' => 'Small globose fleshy red or yellow drupe containing a 4-seeded nutlet.',
                 'distinctive_markings' => 'Small thick dark green leaves with 3-5 teeth at tip and rough sandpaper-like white hairy texture; small white star flowers.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/tsaang_gubat_leaf.jpg', 'filename' => 'tsaang_gubat_leaf.jpg', 'type' => 'leaf']
+                ],
                 'names' => [
                     ['name' => 'Tsaang Gubat', 'type' => 'tagalog', 'region' => 'National'],
                     ['name' => 'Wild Tea / Fukien Tea Tree', 'type' => 'english', 'region' => 'International'],
@@ -523,6 +550,9 @@ class SeedDatabase
                 'flower_description' => 'Small yellowish-green monoecious flowers in axillary cymes.',
                 'fruit_description' => 'Capsule containing 3 black oil-rich seeds.',
                 'distinctive_markings' => 'HIGHLY POISONOUS SEEDS; abundant sticky sap when stem or petiole is broken; cordate lobed leaves.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/poison_jatropha.jpg', 'filename' => 'poison_jatropha.jpg', 'type' => 'leaf']
+                ],
                 'names' => [
                     ['name' => 'Tubang Bakod', 'type' => 'tagalog', 'region' => 'Luzon'],
                     ['name' => 'Physic Nut', 'type' => 'english', 'region' => 'International'],
@@ -590,6 +620,9 @@ class SeedDatabase
                 'flower_description' => 'Creamy-white 4-petaled fragrant flowers.',
                 'fruit_description' => 'Globose fruit (Mabolo) covered in dense reddish-brown velvet hairs containing sweet reddish-white aromatic flesh.',
                 'distinctive_markings' => 'Jet-black iron-wood heartwood (Ironwood); velvet-hairy edible Mabolo fruit; golden silky leaf underside.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/kamagong_tree.jpg', 'filename' => 'kamagong_tree.jpg', 'type' => 'whole_plant']
+                ],
                 'names' => [
                     ['name' => 'Kamagong', 'type' => 'tagalog', 'region' => 'National'],
                     ['name' => 'Mabolo / Velvet Apple', 'type' => 'english', 'region' => 'International'],
@@ -657,6 +690,9 @@ class SeedDatabase
                 'flower_description' => 'Blue to pale violet small flowers in terminal panicles.',
                 'fruit_description' => 'Small globose succulent purplish-black drupe.',
                 'distinctive_markings' => 'Trifoliate leaves (strictly 3 leaflets); yellowish durable wood turning olive green when submerged in water.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/molave_tree.jpg', 'filename' => 'molave_tree.jpg', 'type' => 'whole_plant']
+                ],
                 'names' => [
                     ['name' => 'Molave', 'type' => 'tagalog', 'region' => 'National'],
                     ['name' => 'Small-flower Chaste Tree', 'type' => 'english', 'region' => 'International'],
@@ -700,6 +736,498 @@ class SeedDatabase
                     ['name' => 'DENR Biodiversity Management Bureau Protected Flora', 'url' => 'https://bmb.gov.ph', 'type' => 'government'],
                     ['name' => 'Philippine Native Tree Enthusiasts (PNTE Guide)', 'url' => 'https://pnte.org', 'type' => 'publication']
                 ]
+            ],
+            [
+                'scientific_name' => 'Psidium guajava',
+                'primary_common_name' => 'Bayabas',
+                'kingdom' => 'Plantae',
+                'family' => 'Myrtaceae',
+                'genus' => 'Psidium',
+                'species' => 'guajava',
+                'native_status' => 'NATURALIZED',
+                'habitat' => 'Backyards, secondary thickets, agricultural lands, and open fields.',
+                'philippine_distribution' => 'Abundant across all islands and provinces of the Philippines.',
+                'elevation_range' => '0 - 1500 m above sea level',
+                'forest_type' => 'Secondary thickets and agricultural landscapes',
+                'leaf_type' => 'Simple, thick, elliptic to oblong, prominent parallel veins',
+                'leaf_arrangement' => 'Opposite',
+                'leaf_margin' => 'Entire',
+                'leaf_apex' => 'Acute to obtuse',
+                'leaf_base' => 'Rounded',
+                'venation' => 'Pinnate with strongly sunken veins above and prominent below',
+                'growth_habit' => 'Small tree or large shrub 3-8 meters tall',
+                'bark_description' => 'Smooth, copper-colored or light brown, peeling in thin sheets.',
+                'flower_description' => 'White fragrant flowers with numerous prominent white stamens.',
+                'fruit_description' => 'Globose or pear-shaped berry, yellow when ripe, sweet edible pink or white pulp.',
+                'distinctive_markings' => 'Aromatic guava smell; smooth copper peeling bark; opposite leaves with sunken veins; DOH approved antiseptic.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/bayabas_leaf.jpg', 'filename' => 'bayabas_leaf.jpg', 'type' => 'leaf'],
+                    ['file_path' => 'assets/images/species/bayabas_fruit.jpg', 'filename' => 'bayabas_fruit.jpg', 'type' => 'fruit']
+                ],
+                'names' => [
+                    ['name' => 'Bayabas', 'type' => 'tagalog', 'region' => 'National'],
+                    ['name' => 'Guava', 'type' => 'english', 'region' => 'International'],
+                    ['name' => 'Geyabas', 'type' => 'local', 'region' => 'Ilocos'],
+                    ['name' => 'Tayabas', 'type' => 'local', 'region' => 'Cagayan'],
+                    ['name' => 'Biabas', 'type' => 'regional', 'region' => 'Mindanao/Visayas']
+                ],
+                'uses' => [
+                    ['category' => 'ecological', 'title' => 'Wildlife Food & Shade', 'description' => 'Fruits feed native birds, bats, and small mammals.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'agricultural', 'title' => 'Fruit Crop & Fuelwood', 'description' => 'Cultivated in home gardens for nutrient-rich fruit (high Vitamin C).', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'traditional', 'title' => 'Antiseptic Wash & Toothache Relief', 'description' => 'Leaf decoction widely used for washing wounds, circumcision care, and gargle for toothache.', 'evidence' => 'TRADITIONAL_USE_ONLY'],
+                    ['category' => 'scientific', 'title' => 'Antimicrobial & Astringent Activity', 'description' => 'DOH-PITAHC approved primary herbal drug for wound disinfection and mouth wash.', 'evidence' => 'ESTABLISHED']
+                ],
+                'medicinal' => [
+                    'is_recognized_medicinal' => 'YES',
+                    'traditional_uses_text' => 'Warm leaf decoction used for cleansing wounds, skin ulcers, diarrhea, and mouth sores.',
+                    'scientific_evidence_text' => 'DOH-PITAHC approved 10 priority medicinal plant. Rich in tannins and flavonoids with antibacterial action against Staphylococcus aureus and E. coli.',
+                    'active_compounds' => 'Guaijaverin, quercetin, tannins, β-sitosterol, essential oils.',
+                    'known_risks' => 'Constipation if excessive decoction is ingested internally due to astringent tannins.',
+                    'known_interactions' => 'None reported for topical antiseptic wash.',
+                    'toxic_parts' => 'None.',
+                    'preparation_risks' => 'Ensure decoction is cooled to warm temperature before wound washing.'
+                ],
+                'safety' => [
+                    'safety_category' => 'SAFE_FOR_GENERAL_CONTACT',
+                    'primary_warning' => 'Deep infected surgical wounds require professional sterile medical dressing.',
+                    'toxic_parts' => 'None.',
+                    'look_alike_species' => 'Psidium littorale (Strawberry Guava)',
+                    'look_alike_distinction' => 'Psidium littorale has smaller glossy dark red/yellow fruits and smooth glossy non-sunken leaves.',
+                    'warning_text' => 'WASH LEAF DECOCTION WARM, NOT SCALDING HOT.'
+                ],
+                'conservation' => [
+                    'iucn_status' => 'Least Concern (LC)',
+                    'denr_status' => 'Not Listed',
+                    'threatened_status' => 'Abundant',
+                    'protected_status' => 'Commonly Cultivated',
+                    'cites_status' => 'Not Listed',
+                    'collection_restrictions' => 'None.'
+                ],
+                'sources' => [
+                    ['name' => 'DOH PITAHC Approved 10 Medicinal Plants', 'url' => 'https://pitahc.gov.ph', 'type' => 'government']
+                ]
+            ],
+            [
+                'scientific_name' => 'Peperomia pellucida',
+                'primary_common_name' => 'Pansit-pansitan',
+                'kingdom' => 'Plantae',
+                'family' => 'Piperaceae',
+                'genus' => 'Peperomia',
+                'species' => 'pellucida',
+                'native_status' => 'NATURALIZED',
+                'habitat' => 'Damp shaded areas, plant pots, rock crevices, brick walls, riverbanks.',
+                'philippine_distribution' => 'Abundant throughout the Philippines.',
+                'elevation_range' => '0 - 1000 m above sea level',
+                'forest_type' => 'Damp shaded understory, gardens, urban damp walls',
+                'leaf_type' => 'Simple, translucent, fleshy heart-shaped (cordate) leaves',
+                'leaf_arrangement' => 'Alternate',
+                'leaf_margin' => 'Entire',
+                'leaf_apex' => 'Acute',
+                'leaf_base' => 'Cordate',
+                'venation' => 'Palmate (3-5 faint veins)',
+                'growth_habit' => 'Small succulent annual herb 10-40 cm tall with translucent watery stems',
+                'bark_description' => 'Herbaceous, delicate clear light green stem.',
+                'flower_description' => 'Tiny green spike flowers protruding from leaf axils.',
+                'fruit_description' => 'Tiny globose seed attached to flower spike.',
+                'distinctive_markings' => 'Translucent succulent heart-shaped leaf; watery stem; edible mild mustard/cucumber taste; DOH approved for gout.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/pansit_pansitan_plant.jpg', 'filename' => 'pansit_pansitan_plant.jpg', 'type' => 'whole_plant'],
+                    ['file_path' => 'assets/images/species/pansit_pansitan_leaf.jpg', 'filename' => 'pansit_pansitan_leaf.jpg', 'type' => 'leaf']
+                ],
+                'names' => [
+                    ['name' => 'Pansit-pansitan', 'type' => 'tagalog', 'region' => 'National'],
+                    ['name' => 'Ulasimang Bato', 'type' => 'tagalog', 'region' => 'Tagalog'],
+                    ['name' => 'Clearweed / Shiny Bush', 'type' => 'english', 'region' => 'International'],
+                    ['name' => 'Sinaw-sinaw', 'type' => 'regional', 'region' => 'Visayas'],
+                    ['name' => 'Tangon-tangon', 'type' => 'regional', 'region' => 'Bicol']
+                ],
+                'uses' => [
+                    ['category' => 'ecological', 'title' => 'Shade Ground Cover', 'description' => 'Covers damp soil, preventing topsoil erosion in garden shaded beds.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'agricultural', 'title' => 'Edible Salad Herb', 'description' => 'Leaves and stems eaten fresh in raw salads.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'traditional', 'title' => 'Gout & Arthritis Salad', 'description' => 'Fresh leaves consumed raw or boiled as a tea for reducing joint swelling and uric acid.', 'evidence' => 'TRADITIONAL_USE_ONLY'],
+                    ['category' => 'scientific', 'title' => 'Hyperuricemia & Anti-gout Efficacy', 'description' => 'DOH-PITAHC approved 10 priority herbal drug for lowering blood uric acid levels.', 'evidence' => 'ESTABLISHED']
+                ],
+                'medicinal' => [
+                    'is_recognized_medicinal' => 'YES',
+                    'traditional_uses_text' => 'Eaten fresh or as warm tea for gout, arthritis, kidney conditions, and facial acne wash.',
+                    'scientific_evidence_text' => 'DOH-PITAHC approved primary herbal drug. Xanthine oxidase inhibitory activity confirmed in pharmacological trials, lowering serum uric acid.',
+                    'active_compounds' => 'Pellucidatin, apiol, phytols, acacetin, flavonoids.',
+                    'known_risks' => 'Mild asthmatic or allergic skin reaction in rare individuals.',
+                    'known_interactions' => 'Synergistic with synthetic uric acid lowering drugs like Allopurinol.',
+                    'toxic_parts' => 'None; whole herb is edible.',
+                    'preparation_risks' => 'Wash thoroughly with clean water if harvested near urban ground runoff.'
+                ],
+                'safety' => [
+                    'safety_category' => 'SAFE_FOR_GENERAL_CONTACT',
+                    'primary_warning' => 'Do not harvest from roadside soils exposed to vehicle heavy metal runoff or pet contamination.',
+                    'toxic_parts' => 'None.',
+                    'look_alike_species' => 'Pilea microphylla (Angel\'s Tears / Gunpowder Plant)',
+                    'look_alike_distinction' => 'Pilea microphylla has tiny fern-like leaves (2-4mm) arranged densely along stems, unlike the clear heart-shaped leaves of Pansit-pansitan.',
+                    'warning_text' => 'HARVEST FROM CLEAN GARDEN BEDS ONLY.'
+                ],
+                'conservation' => [
+                    'iucn_status' => 'Least Concern (LC)',
+                    'denr_status' => 'Not Listed',
+                    'threatened_status' => 'Abundant',
+                    'protected_status' => 'Unprotected Groundweed',
+                    'cites_status' => 'Not Listed',
+                    'collection_restrictions' => 'None.'
+                ],
+                'sources' => [
+                    ['name' => 'DOH PITAHC Approved 10 Medicinal Plants', 'url' => 'https://pitahc.gov.ph', 'type' => 'government']
+                ]
+            ],
+            [
+                'scientific_name' => 'Moringa oleifera',
+                'primary_common_name' => 'Malunggay',
+                'kingdom' => 'Plantae',
+                'family' => 'Moringaceae',
+                'genus' => 'Moringa',
+                'species' => 'oleifera',
+                'native_status' => 'NATURALIZED',
+                'habitat' => 'Backyards, farms, roadsides, tropical lowlands everywhere.',
+                'philippine_distribution' => 'Cultivated and naturalized in all 82 Philippine provinces.',
+                'elevation_range' => '0 - 1200 m above sea level',
+                'forest_type' => 'Agricultural, urban backyard, and tropical lowlands',
+                'leaf_type' => 'Tripinnately compound with small rounded elliptic leaflets',
+                'leaf_arrangement' => 'Alternate',
+                'leaf_margin' => 'Entire',
+                'leaf_apex' => 'Obtuse',
+                'leaf_base' => 'Cuneate',
+                'venation' => 'Pinnate on leaflets',
+                'growth_habit' => 'Small fast-growing softwood tree 5-10 meters tall',
+                'bark_description' => 'Corki, whitish-gray, soft wood.',
+                'flower_description' => 'Creamy white yellowish fragrant flowers in drooping panicles.',
+                'fruit_description' => 'Long 3-angled ribbed pendulous pod (drumstick) containing 3-winged seeds.',
+                'distinctive_markings' => 'Tripinnate delicate leaves; long ribbed drumstick pods; superfood vegetable rich in iron and calcium.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/malunggay_leaf.jpg', 'filename' => 'malunggay_leaf.jpg', 'type' => 'leaf'],
+                    ['file_path' => 'assets/images/species/malunggay_pod.jpg', 'filename' => 'malunggay_pod.jpg', 'type' => 'fruit']
+                ],
+                'names' => [
+                    ['name' => 'Malunggay', 'type' => 'tagalog', 'region' => 'National'],
+                    ['name' => 'Moringa / Drumstick Tree', 'type' => 'english', 'region' => 'International'],
+                    ['name' => 'Marunggay', 'type' => 'local', 'region' => 'Ilocos'],
+                    ['name' => 'Kamalunggay', 'type' => 'regional', 'region' => 'Visayas'],
+                    ['name' => 'Kalungai', 'type' => 'regional', 'region' => 'Bicol']
+                ],
+                'uses' => [
+                    ['category' => 'ecological', 'title' => 'Soil Improvement & Agroforestry', 'description' => 'Leaves drop and enrich soil nitrogen; fast biomass producer.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'agricultural', 'title' => 'Superfood Vegetable & Fodder', 'description' => 'National superfood vegetable in Tinola soups; high protein livestock feed.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'traditional', 'title' => 'Lactation Enhancer (Galactagogue)', 'description' => 'Boiled leaves given to nursing mothers to stimulate breastmilk production.', 'evidence' => 'TRADITIONAL_USE_ONLY'],
+                    ['category' => 'scientific', 'title' => 'Galactagogue & Nutritional Profile', 'description' => 'Rich in Vitamin A, C, Calcium, Potassium, and Iron; clinically supported galactagogue.', 'evidence' => 'ESTABLISHED']
+                ],
+                'medicinal' => [
+                    'is_recognized_medicinal' => 'YES',
+                    'traditional_uses_text' => 'Leaves consumed for lactation enhancement, anemia prevention, immunity booster, and blood pressure management.',
+                    'scientific_evidence_text' => 'High concentration of antioxidant polyphenols, glucosinolates, and essential minerals. Endorsed by National Nutrition Council.',
+                    'active_compounds' => 'Moringine, quercetin, chlorogenic acid, β-carotene, iron, calcium.',
+                    'known_risks' => 'High doses of root or bark extracts contain alkaloids that can cause uterine contractions (avoid root/bark during pregnancy).',
+                    'known_interactions' => 'May enhance blood pressure and thyroid medication effects.',
+                    'toxic_parts' => 'Root and bark extracts in concentrated doses (contain moringinine). Leaves are completely safe.',
+                    'preparation_risks' => 'Eat leaves and young pods; avoid consuming raw thick root bark during pregnancy.'
+                ],
+                'safety' => [
+                    'safety_category' => 'SAFE_FOR_GENERAL_CONTACT',
+                    'primary_warning' => 'LEAVES ARE COMPLETELY SAFE SUPERFOOD. Pregnant women should avoid root/bark concentrated extracts.',
+                    'toxic_parts' => 'Root bark in excessive concentrated doses.',
+                    'look_alike_species' => 'Leucaena leucocephala (Ipil-ipil)',
+                    'look_alike_distinction' => 'Ipil-ipil leaves are bipinnate with flat brown seed pods, whereas Malunggay leaves are tripinnate with long 3-angled drumstick pods.',
+                    'warning_text' => 'SAFE NUTRITIONAL SUPERFOOD LEAVES.'
+                ],
+                'conservation' => [
+                    'iucn_status' => 'Least Concern (LC)',
+                    'denr_status' => 'Not Listed',
+                    'threatened_status' => 'Abundant',
+                    'protected_status' => 'Widely Cultivated',
+                    'cites_status' => 'Not Listed',
+                    'collection_restrictions' => 'None.'
+                ],
+                'sources' => [
+                    ['name' => 'National Nutrition Council (NNC) Philippines', 'url' => 'https://nnc.gov.ph', 'type' => 'government'],
+                    ['name' => 'Food and Agriculture Organization (FAO) Moringa Monograph', 'url' => 'https://fao.org', 'type' => 'publication']
+                ]
+            ],
+            [
+                'scientific_name' => 'Andrographis paniculata',
+                'primary_common_name' => 'Serpentina',
+                'kingdom' => 'Plantae',
+                'family' => 'Acanthaceae',
+                'genus' => 'Andrographis',
+                'species' => 'paniculata',
+                'native_status' => 'INTRODUCED',
+                'habitat' => 'Herbal gardens, cultivated beds, waste ground.',
+                'philippine_distribution' => 'Cultivated across Philippine gardens and provinces.',
+                'elevation_range' => '0 - 800 m above sea level',
+                'forest_type' => 'Garden herb beds and secondary shaded clearings',
+                'leaf_type' => 'Simple, lanceolate, dark green, smooth',
+                'leaf_arrangement' => 'Opposite',
+                'leaf_margin' => 'Entire',
+                'leaf_apex' => 'Acuminate',
+                'leaf_base' => 'Cuneate',
+                'venation' => 'Pinnate',
+                'growth_habit' => 'Erect annual herb 30-90 cm tall with square dark green stems',
+                'bark_description' => 'Herbaceous, quadrangular (4-angled) dark green stem.',
+                'flower_description' => 'Small tubular white flowers with purple streaks in axillary racemes.',
+                'fruit_description' => 'Erect linear-oblong capsule containing yellow-brown seeds.',
+                'distinctive_markings' => 'EXTREMELY BITTER TASTE ("King of Bitters"); 4-angled square green stem; dark green opposite leaves.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/serpentina_plant.jpg', 'filename' => 'serpentina_plant.jpg', 'type' => 'whole_plant'],
+                    ['file_path' => 'assets/images/species/serpentina_leaf.jpg', 'filename' => 'serpentina_leaf.jpg', 'type' => 'leaf']
+                ],
+                'names' => [
+                    ['name' => 'Serpentina', 'type' => 'tagalog', 'region' => 'National'],
+                    ['name' => 'King of Bitters / Creat', 'type' => 'english', 'region' => 'International'],
+                    ['name' => 'Sinta', 'type' => 'local', 'region' => 'Tagalog'],
+                    ['name' => 'Alpasotes-bitter', 'type' => 'regional', 'region' => 'Visayas']
+                ],
+                'uses' => [
+                    ['category' => 'ecological', 'title' => 'Garden Pollinator Herb', 'description' => 'Small tubular flowers visited by tiny wild solitary bees.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'agricultural', 'title' => 'Herbal Garden Staple', 'description' => 'Widely grown in Philippine community herbal gardens.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'traditional', 'title' => 'Diabetes & Fever Decoction', 'description' => 'Leaf tea consumed for bitter blood glucose lowering, colds, and fever.', 'evidence' => 'TRADITIONAL_USE_ONLY'],
+                    ['category' => 'scientific', 'title' => 'Andrographolide Immunomodulatory Research', 'description' => 'Contains andrographolides studied extensively for immunostimulant and anti-inflammatory properties.', 'evidence' => 'SUPPORTED_BY_SOME_RESEARCH']
+                ],
+                'medicinal' => [
+                    'is_recognized_medicinal' => 'POTENTIAL',
+                    'traditional_uses_text' => 'Tradition dictates drinking leaf tea for diabetes management, hypertension, and upper respiratory fever.',
+                    'scientific_evidence_text' => 'Andrographolide diterpenes demonstrate in-vitro immunostimulatory and antiviral activity. Requires physician guidance for diabetic patients.',
+                    'active_compounds' => 'Andrographolide, neoandrographolide, 14-deoxyandrographolide, flavonoids.',
+                    'known_risks' => 'High doses may cause gastric discomfort, loss of taste, or allergic skin hives.',
+                    'known_interactions' => 'May interact with blood pressure, antidiabetic, and anticoagulant medications.',
+                    'toxic_parts' => 'None at normal herbal doses.',
+                    'preparation_risks' => 'DO NOT CONSUME DURING PREGNANCY (possesses abortifacient potential in high animal doses).'
+                ],
+                'safety' => [
+                    'safety_category' => 'CAUTION',
+                    'primary_warning' => 'CONTRAINDICATED IN PREGNANCY. Diabetic patients must monitor blood sugar to avoid hypoglycemia.',
+                    'toxic_parts' => 'High concentrated doses.',
+                    'look_alike_species' => 'Rauvolfia serpentina (Indian Snakeroot - Toxic)',
+                    'look_alike_distinction' => 'Rauvolfia serpentina has whorled leaves (3-4 at node) and fleshy red/black berries containing powerful reserpine alkaloids, unlike Andrographis paniculata which has opposite leaves and square stems.',
+                    'warning_text' => 'VERIFY SQUARE STEM AND OPPOSITE LEAF ARRANGEMENT.'
+                ],
+                'conservation' => [
+                    'iucn_status' => 'Least Concern (LC)',
+                    'denr_status' => 'Not Listed',
+                    'threatened_status' => 'Safe',
+                    'protected_status' => 'Cultivated Herb',
+                    'cites_status' => 'Not Listed',
+                    'collection_restrictions' => 'Cultivated in home herbal plots.'
+                ],
+                'sources' => [
+                    ['name' => 'Plants of the World Online (POWO - Andrographis paniculata)', 'url' => 'https://powo.science.kew.org', 'type' => 'database'],
+                    ['name' => 'WHO Monographs on Selected Medicinal Plants - Vol 2', 'url' => 'https://who.int', 'type' => 'publication']
+                ]
+            ],
+            [
+                'scientific_name' => 'Curcuma longa',
+                'primary_common_name' => 'Luyang Dilaw',
+                'kingdom' => 'Plantae',
+                'family' => 'Zingiberaceae',
+                'genus' => 'Curcuma',
+                'species' => 'longa',
+                'native_status' => 'NATURALIZED',
+                'habitat' => 'Farms, home gardens, damp shaded tropical soils.',
+                'philippine_distribution' => 'Cultivated extensively throughout the Philippines.',
+                'elevation_range' => '0 - 1200 m above sea level',
+                'forest_type' => 'Agricultural crops and forest understory garden plots',
+                'leaf_type' => 'Simple, large (30-90cm), oblong-lanceolate, smooth green',
+                'leaf_arrangement' => 'Basal tufted tufts',
+                'leaf_margin' => 'Entire',
+                'leaf_apex' => 'Acuminate',
+                'leaf_base' => 'Attenuate',
+                'venation' => 'Parallel from central midrib',
+                'growth_habit' => 'Perennial rhizomatous herb 60-100 cm tall with deep bright orange rhizome',
+                'bark_description' => 'Herbaceous pseudostem formed by leaf sheaths.',
+                'flower_description' => 'Pale yellow spike enclosed in whitish-green to pinkish bracts.',
+                'fruit_description' => 'Rarely fruits; propagated by rhizome division.',
+                'distinctive_markings' => 'Deep orange-yellow interior rhizome; aromatic yellow dye stain; broad smooth basal leaves.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/luyang_dilaw_rhizome.jpg', 'filename' => 'luyang_dilaw_rhizome.jpg', 'type' => 'whole_plant'],
+                    ['file_path' => 'assets/images/species/luyang_dilaw_leaf.jpg', 'filename' => 'luyang_dilaw_leaf.jpg', 'type' => 'leaf']
+                ],
+                'names' => [
+                    ['name' => 'Luyang Dilaw', 'type' => 'tagalog', 'region' => 'National'],
+                    ['name' => 'Turmeric', 'type' => 'english', 'region' => 'International'],
+                    ['name' => 'Dulaw', 'type' => 'regional', 'region' => 'Visayas'],
+                    ['name' => 'Kalawag', 'type' => 'regional', 'region' => 'Mindanao'],
+                    ['name' => 'Kunyit', 'type' => 'local', 'region' => 'Sulu']
+                ],
+                'uses' => [
+                    ['category' => 'ecological', 'title' => 'Understory Cover Crop', 'description' => 'Grows well under tree canopy, enhancing soil organic layer.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'agricultural', 'title' => 'Spice Crop & Natural Colorant', 'description' => 'Key culinary ingredient in Filipino Bringhe, curry, and natural yellow food dye.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'traditional', 'title' => 'Turmeric Tea & Topical Paste', 'description' => 'Warm rhizome tea (Salabat variant) drunk for inflammation, arthritis, and liver wellness.', 'evidence' => 'TRADITIONAL_USE_ONLY'],
+                    ['category' => 'scientific', 'title' => 'Curcumin Antioxidant & Anti-inflammatory', 'description' => 'Curcuminoid compounds extensively researched for COX-2 inhibition and antioxidant activity.', 'evidence' => 'SUPPORTED_BY_SOME_RESEARCH']
+                ],
+                'medicinal' => [
+                    'is_recognized_medicinal' => 'YES',
+                    'traditional_uses_text' => 'Rhizome boiled for sore throat, joint pain, digestive upset, and skin wound topical poultice.',
+                    'scientific_evidence_text' => 'Curcuminoids display documented anti-inflammatory and antioxidant properties in numerous clinical studies.',
+                    'active_compounds' => 'Curcumin, demethoxycurcumin, bisdemethoxycurcumin, turmerones.',
+                    'known_risks' => 'High doses may trigger acid stomach or gall bladder contractions in patients with gallstones.',
+                    'known_interactions' => 'May potentiate blood thinners (Warfarin, Aspirin); exercise caution before surgery.',
+                    'toxic_parts' => 'None.',
+                    'preparation_risks' => 'Stains skin and utensils yellow.'
+                ],
+                'safety' => [
+                    'safety_category' => 'SAFE_FOR_GENERAL_CONTACT',
+                    'primary_warning' => 'Patients with bile duct obstruction or gallstones should avoid high-dose turmeric supplements.',
+                    'toxic_parts' => 'None.',
+                    'look_alike_species' => 'Curcuma zedoaria (White Turmeric / Barak)',
+                    'look_alike_distinction' => 'Barak rhizome is light pale yellowish-white inside with a purple stripe along the central midrib of the leaf.',
+                    'warning_text' => 'SAFE CULINARY AND HERBAL RHIZOME.'
+                ],
+                'conservation' => [
+                    'iucn_status' => 'Least Concern (LC)',
+                    'denr_status' => 'Not Listed',
+                    'threatened_status' => 'Safe',
+                    'protected_status' => 'Widely Farmed',
+                    'cites_status' => 'Not Listed',
+                    'collection_restrictions' => 'None.'
+                ],
+                'sources' => [
+                    ['name' => 'PITAHC Traditional Health Monograph', 'url' => 'https://pitahc.gov.ph', 'type' => 'government']
+                ]
+            ],
+            [
+                'scientific_name' => 'Plectranthus scutellarioides',
+                'primary_common_name' => 'Mayana',
+                'kingdom' => 'Plantae',
+                'family' => 'Lamiaceae',
+                'genus' => 'Plectranthus',
+                'species' => 'scutellarioides',
+                'native_status' => 'NATIVE',
+                'habitat' => 'Home gardens, shaded slopes, forest understory, parks.',
+                'philippine_distribution' => 'Commonly grown and found throughout the entire archipelago.',
+                'elevation_range' => '0 - 1500 m above sea level',
+                'forest_type' => 'Shaded moist gardens and secondary forest edges',
+                'leaf_type' => 'Simple, ovate, membranous, vividly colored (purple, red, yellow, green)',
+                'leaf_arrangement' => 'Opposite',
+                'leaf_margin' => 'Crenate or serrate',
+                'leaf_apex' => 'Acuminate',
+                'leaf_base' => 'Cuneate to rounded',
+                'venation' => 'Pinnate',
+                'growth_habit' => 'Erect succulent herbaceous plant 30-80 cm tall with square stems',
+                'bark_description' => 'Fleshy quadrangular 4-angled stem.',
+                'flower_description' => 'Small blue or pale violet two-lipped flowers in terminal spikes.',
+                'fruit_description' => 'Tiny nutlets.',
+                'distinctive_markings' => 'Vivid purple/magenta variegated heart leaves; 4-angled square fleshy stem; crushed leaf poultice for bruises.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/mayana_leaf.jpg', 'filename' => 'mayana_leaf.jpg', 'type' => 'leaf'],
+                    ['file_path' => 'assets/images/species/mayana_plant.jpg', 'filename' => 'mayana_plant.jpg', 'type' => 'whole_plant']
+                ],
+                'names' => [
+                    ['name' => 'Mayana', 'type' => 'tagalog', 'region' => 'National'],
+                    ['name' => 'Coleus / Painted Nettle', 'type' => 'english', 'region' => 'International'],
+                    ['name' => 'Baddang', 'type' => 'local', 'region' => 'Ilocos'],
+                    ['name' => 'Laponya', 'type' => 'regional', 'region' => 'Visayas'],
+                    ['name' => 'Salingkugi', 'type' => 'regional', 'region' => 'Mindanao']
+                ],
+                'uses' => [
+                    ['category' => 'ecological', 'title' => 'Ornamental Pollinator Shrub', 'description' => 'Flowers feed native butterflies and small garden bees.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'agricultural', 'title' => 'Popular Foliage Plant', 'description' => 'Planted for colorful foliage landscaping in Philippine households.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'traditional', 'title' => 'Bruise & Hematoma Poultice', 'description' => 'Crushed warm purple leaves applied over sprains, bruises, swelling, and headache temples.', 'evidence' => 'TRADITIONAL_USE_ONLY'],
+                    ['category' => 'scientific', 'title' => 'Rosmarinic Acid & Anthocyanin Content', 'description' => 'High concentration of antioxidant rosmarinic acid and antimicrobial flavonoids.', 'evidence' => 'SUPPORTED_BY_SOME_RESEARCH']
+                ],
+                'medicinal' => [
+                    'is_recognized_medicinal' => 'TRADITIONALLY_USED',
+                    'traditional_uses_text' => 'Crushed fresh leaves applied topically for contusions, bruises, sprains, and minor skin cuts.',
+                    'scientific_evidence_text' => 'Exhibits antioxidant and antimicrobial action in vitro due to high flavonoid and rosmarinic acid levels.',
+                    'active_compounds' => 'Rosmarinic acid, coleonols, anthocyanins, flavonoids.',
+                    'known_risks' => 'None for topical poultice.',
+                    'known_interactions' => 'None reported.',
+                    'toxic_parts' => 'None.',
+                    'preparation_risks' => 'Wash leaves before heating for poultice application.'
+                ],
+                'safety' => [
+                    'safety_category' => 'SAFE_FOR_GENERAL_CONTACT',
+                    'primary_warning' => 'Topical poultice usage only. Do not consume raw stems in excessive quantities.',
+                    'toxic_parts' => 'None.',
+                    'look_alike_species' => 'Perilla frutescens (Shiso)',
+                    'look_alike_distinction' => 'Perilla frutescens leaves have a strong distinct anise/mint aroma and serrate dark purple margins.',
+                    'warning_text' => 'TOPICAL POULTICE FOR BRUISES AND SWELLING.'
+                ],
+                'conservation' => [
+                    'iucn_status' => 'Least Concern (LC)',
+                    'denr_status' => 'Not Listed',
+                    'threatened_status' => 'Safe',
+                    'protected_status' => 'Commonly Cultivated',
+                    'cites_status' => 'Not Listed',
+                    'collection_restrictions' => 'None.'
+                ],
+                'sources' => [
+                    ['name' => 'Philippine Ethnobotanical Plant Database', 'url' => 'https://stii.dost.gov.ph', 'type' => 'government']
+                ]
+            ],
+            [
+                'scientific_name' => 'Annona muricata',
+                'primary_common_name' => 'Guyabano',
+                'kingdom' => 'Plantae',
+                'family' => 'Annonaceae',
+                'genus' => 'Annona',
+                'species' => 'muricata',
+                'native_status' => 'NATURALIZED',
+                'habitat' => 'Lowland orchards, backyards, secondary agricultural forests.',
+                'philippine_distribution' => 'Cultivated in all island groups of the Philippines.',
+                'elevation_range' => '0 - 1000 m above sea level',
+                'forest_type' => 'Secondary lowland agricultural groves',
+                'leaf_type' => 'Simple, obovate to oblong, glossy dark green upper, smooth',
+                'leaf_arrangement' => 'Alternate',
+                'leaf_margin' => 'Entire',
+                'leaf_apex' => 'Acute to acuminate',
+                'leaf_base' => 'Cuneate',
+                'venation' => 'Pinnate',
+                'growth_habit' => 'Small evergreen fruit tree 3-8 meters tall',
+                'bark_description' => 'Smooth gray or dark brown bark.',
+                'flower_description' => 'Large yellowish-green 3-petaled thick fleshy flowers on trunk or branches (cauliflory).',
+                'fruit_description' => 'Large heart-shaped dark green fruit with soft pliable spines and juicy sour-sweet white pulp.',
+                'distinctive_markings' => 'Pliable spiky green fruit; glossy dark green leaves with pungent aromatic scent when crushed.',
+                'images' => [
+                    ['file_path' => 'assets/images/species/guyabano_fruit.jpg', 'filename' => 'guyabano_fruit.jpg', 'type' => 'fruit'],
+                    ['file_path' => 'assets/images/species/guyabano_leaf.jpg', 'filename' => 'guyabano_leaf.jpg', 'type' => 'leaf']
+                ],
+                'names' => [
+                    ['name' => 'Guyabano', 'type' => 'tagalog', 'region' => 'National'],
+                    ['name' => 'Soursop', 'type' => 'english', 'region' => 'International'],
+                    ['name' => 'Bayubana', 'type' => 'local', 'region' => 'Ilocos'],
+                    ['name' => 'Guayabano', 'type' => 'regional', 'region' => 'Visayas'],
+                    ['name' => 'Yabana', 'type' => 'local', 'region' => 'Cagayan']
+                ],
+                'uses' => [
+                    ['category' => 'ecological', 'title' => 'Orchard Ecosystem Tree', 'description' => 'Provides fruit for local birds and bats.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'agricultural', 'title' => 'Commercial Fruit & Juice Crop', 'description' => 'Cultivated widely for fresh fruit, nectar, smoothies, and jelly products.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'traditional', 'title' => 'Sedative & Anti-hypertension Tea', 'description' => 'Leaf decoction drunk for sedation, smooth sleep, fever, and blood pressure control.', 'evidence' => 'TRADITIONAL_USE_ONLY'],
+                    ['category' => 'scientific', 'title' => 'Annonaceous Acetogenins Research', 'description' => 'Contains acetogenins studied in vitro for cytotoxic effects; clinical cancer claims remain UNPROVEN and unapproved.', 'evidence' => 'PRELIMINARY_EVIDENCE']
+                ],
+                'medicinal' => [
+                    'is_recognized_medicinal' => 'TRADITIONALLY_USED',
+                    'traditional_uses_text' => 'Leaves boiled for high blood pressure, calming anxiety, fever relief, and joint swelling.',
+                    'scientific_evidence_text' => 'In-vitro lab studies show acetogenin cytotoxicity against cell lines, but clinical efficacy in humans IS NOT established. FDA warns against false cancer cure claims.',
+                    'active_compounds' => 'Annonaceous acetogenins (annonacin, muricin), alkaloids, quercetin.',
+                    'known_risks' => 'Chronic high consumption of seeds or concentrated leaf extracts containing annonacin linked to neurotoxicity (atypical Parkinsonism).',
+                    'known_interactions' => 'May potentiate blood pressure medication.',
+                    'toxic_parts' => 'SEEDS ARE TOXIC. Avoid swallowing crushed seeds.',
+                    'preparation_risks' => 'Do not boil or ingest crushed seeds.'
+                ],
+                'safety' => [
+                    'safety_category' => 'CAUTION',
+                    'primary_warning' => 'DO NOT CONSUME GUYABANO AS A SUBSTITUTE FOR CLINICAL CANCER TREATMENT. Seeds contain toxic neurotoxins.',
+                    'toxic_parts' => 'Seeds contain annonacin neurotoxin.',
+                    'look_alike_species' => 'Annona squamosa (Atis / Sugar Apple)',
+                    'look_alike_distinction' => 'Atis has knobby segmented light-green fruit without spiky spines, and smaller lighter green leaves.',
+                    'warning_text' => 'DO NOT CONSUME SEEDS. FRUIT PULP IS SAFE AND NUTRITIOUS.'
+                ],
+                'conservation' => [
+                    'iucn_status' => 'Least Concern (LC)',
+                    'denr_status' => 'Not Listed',
+                    'threatened_status' => 'Safe',
+                    'protected_status' => 'Widely Cultivated',
+                    'cites_status' => 'Not Listed',
+                    'collection_restrictions' => 'None.'
+                ],
+                'sources' => [
+                    ['name' => 'FDA Philippines Advisory on Herbal Product Claims', 'url' => 'https://fda.gov.ph', 'type' => 'government'],
+                    ['name' => 'Memorial Sloan Kettering Cancer Center Integrative Medicine Guide - Soursop', 'url' => 'https://mskcc.org', 'type' => 'academic']
+                ]
             ]
         ];
 
@@ -719,6 +1247,14 @@ class SeedDatabase
             ]);
 
             $plantId = $pdo->lastInsertId();
+
+            // Images
+            if (!empty($pData['images'])) {
+                $stmtImg = $pdo->prepare("INSERT INTO plant_images (plant_id, file_path, original_filename, image_type, mime_type, file_size) VALUES (?, ?, ?, ?, 'image/jpeg', 102400)");
+                foreach ($pData['images'] as $img) {
+                    $stmtImg->execute([$plantId, $img['file_path'], $img['filename'], $img['type']]);
+                }
+            }
 
             // Names
             $stmtName = $pdo->prepare("INSERT INTO plant_names (plant_id, name, name_type, language_region, verified_status) VALUES (?, ?, ?, ?, 'verified')");

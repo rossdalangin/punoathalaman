@@ -33,5 +33,15 @@ $router->post('/api/admin/settings', [App\Controllers\Api\AdminApiController::cl
 $router->post('/api/admin/reseed', [App\Controllers\Api\AdminApiController::class, 'reseedDatabase']);
 $router->get('/api/admin/reviews', [App\Controllers\Api\AdminApiController::class, 'getReviews']);
 $router->post('/api/admin/reviews/verify', [App\Controllers\Api\AdminApiController::class, 'verifyReview']);
+
+// Admin Plant CRUD & Asset Management
 $router->post('/api/admin/plants', [App\Controllers\Api\AdminApiController::class, 'storePlant'], [App\Middleware\AuthMiddleware::class]);
+$router->post('/api/admin/plants/{id}', [App\Controllers\Api\AdminApiController::class, 'updatePlant'], [App\Middleware\AuthMiddleware::class]);
 $router->patch('/api/admin/plants/{id}', [App\Controllers\Api\AdminApiController::class, 'updatePlant'], [App\Middleware\AuthMiddleware::class]);
+$router->delete('/api/admin/plants/{id}', [App\Controllers\Api\AdminApiController::class, 'deletePlant'], [App\Middleware\AuthMiddleware::class]);
+
+$router->post('/api/admin/plants/{id}/alias', [App\Controllers\Api\AdminApiController::class, 'addPlantAlias'], [App\Middleware\AuthMiddleware::class]);
+$router->delete('/api/admin/alias/{id}', [App\Controllers\Api\AdminApiController::class, 'deletePlantAlias'], [App\Middleware\AuthMiddleware::class]);
+
+$router->post('/api/admin/plants/{id}/image', [App\Controllers\Api\AdminApiController::class, 'addPlantImage'], [App\Middleware\AuthMiddleware::class]);
+$router->delete('/api/admin/image/{id}', [App\Controllers\Api\AdminApiController::class, 'deletePlantImage'], [App\Middleware\AuthMiddleware::class]);

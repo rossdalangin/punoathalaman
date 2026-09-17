@@ -12,7 +12,12 @@ class PlantApiController
         header('Content-Type: application/json');
         $pdo = Database::getConnection();
 
-        $stmt = $pdo->prepare("SELECT id, scientific_name, primary_common_name, family, native_status, habitat FROM plants ORDER BY primary_common_name ASC");
+        $stmt = $pdo->prepare("
+            SELECT p.id, p.scientific_name, p.primary_common_name, p.family, p.genus, p.species, p.native_status, p.habitat, p.philippine_distribution,
+                   (SELECT file_path FROM plant_images WHERE plant_id = p.id LIMIT 1) as main_image
+            FROM plants p
+            ORDER BY p.primary_common_name ASC
+        ");
         $stmt->execute();
         $plants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -31,13 +36,14 @@ class PlantApiController
 
         $pdo = Database::getConnection();
         $stmt = $pdo->prepare("
-            SELECT DISTINCT p.id, p.scientific_name, p.primary_common_name, p.family, p.native_status
+            SELECT DISTINCT p.id, p.scientific_name, p.primary_common_name, p.family, p.native_status,
+                   (SELECT file_path FROM plant_images WHERE plant_id = p.id LIMIT 1) as main_image
             FROM plants p
             LEFT JOIN plant_names pn ON p.id = pn.plant_id
             WHERE p.scientific_name LIKE ?
                OR p.primary_common_name LIKE ?
                OR pn.name LIKE ?
-            LIMIT 20
+            LIMIT 25
         ");
         $searchTerm = "%{$query}%";
         $stmt->execute([$searchTerm, $searchTerm, $searchTerm]);
@@ -64,12 +70,17 @@ class PlantApiController
         $plantId = $plant['id'];
 
         // Names
-        $stmtN = $pdo->prepare("SELECT name, name_type, language_region FROM plant_names WHERE plant_id = ?");
+        $stmtN = $pdo->prepare("SELECT id, name, name_type, language_region, verified_status FROM plant_names WHERE plant_id = ?");
         $stmtN->execute([$plantId]);
         $plant['names'] = $stmtN->fetchAll(PDO::FETCH_ASSOC);
 
+        // Images
+        $stmtI = $pdo->prepare("SELECT id, file_path, original_filename, image_type, mime_type FROM plant_images WHERE plant_id = ?");
+        $stmtI->execute([$plantId]);
+        $plant['images'] = $stmtI->fetchAll(PDO::FETCH_ASSOC);
+
         // Uses
-        $stmtU = $pdo->prepare("SELECT use_category, title, description, evidence_level FROM plant_uses WHERE plant_id = ?");
+        $stmtU = $pdo->prepare("SELECT id, use_category, title, description, evidence_level FROM plant_uses WHERE plant_id = ?");
         $stmtU->execute([$plantId]);
         $plant['uses'] = $stmtU->fetchAll(PDO::FETCH_ASSOC);
 
@@ -89,7 +100,7 @@ class PlantApiController
         $plant['conservation'] = $stmtC->fetch(PDO::FETCH_ASSOC);
 
         // Sources
-        $stmtSrc = $pdo->prepare("SELECT source_name, source_url, source_type FROM plant_sources WHERE plant_id = ?");
+        $stmtSrc = $pdo->prepare("SELECT id, source_name, source_url, source_type, fact_type FROM plant_sources WHERE plant_id = ?");
         $stmtSrc->execute([$plantId]);
         $plant['sources'] = $stmtSrc->fetchAll(PDO::FETCH_ASSOC);
 
