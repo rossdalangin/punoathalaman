@@ -39,8 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step == 2) {
     $dbName = trim($_POST['db_name'] ?? 'puno_at_halaman');
     $dbUser = trim($_POST['db_user'] ?? 'root');
     $dbPass = $_POST['db_pass'] ?? '';
-    $aiProvider = trim($_POST['ai_provider'] ?? 'mock');
+    $aiProvider = trim($_POST['ai_provider'] ?? 'gemini');
     $aiApiKey = trim($_POST['ai_api_key'] ?? '');
+    $aiModel = ($aiProvider === 'openai') ? 'gpt-4o' : 'gemini-2.0-flash';
 
     try {
         // 1. Test database connection
@@ -80,7 +81,7 @@ DB_PASSWORD={$dbPass}
 # AI Identifier Configuration
 AI_PROVIDER={$aiProvider}
 AI_API_KEY={$aiApiKey}
-AI_MODEL=gpt-4o
+AI_MODEL={$aiModel}
 
 # Upload Settings
 MAX_UPLOAD_SIZE_MB=10
@@ -192,14 +193,14 @@ ENV;
             <div class="form-group">
                 <label>AI Vision Provider:</label>
                 <select name="ai_provider" class="form-control">
-                    <option value="mock">Mock Offline Model (Ready Default)</option>
+                    <option value="gemini">Google Gemini AI (Free Tier: gemini-2.0-flash / gemini-1.5-flash)</option>
                     <option value="openai">OpenAI (GPT-4o Vision API)</option>
-                    <option value="gemini">Google Gemini Vision API</option>
+                    <option value="mock">Mock Offline Model (Zero API Key)</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>AI API Key (Optional):</label>
-                <input type="text" name="ai_api_key" class="form-control" placeholder="Paste OpenAI or Gemini API key">
+                <label>AI API Key (Get Free Gemini Key at aistudio.google.com):</label>
+                <input type="text" name="ai_api_key" class="form-control" placeholder="Paste Google Gemini or OpenAI API key">
             </div>
 
             <button type="submit" class="btn" style="width: 100%;">Install & Seed Application</button>
