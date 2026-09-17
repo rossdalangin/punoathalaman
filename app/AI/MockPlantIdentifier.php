@@ -48,7 +48,7 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
         }
 
         // Species keyword matching from filename or metadata hints
-        $targetSpecies = 'Blumea balsamifera'; // Default to Sambong for general herbal leaf uploads
+        $targetSpecies = 'Blumea balsamifera'; // Default to Sambong
         $altSpecies = 'Lagerstroemia speciosa'; // Banaba as alternative candidate
 
         if (str_contains($filenameLower, 'banaba')) {
@@ -60,7 +60,7 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
         } elseif (str_contains($filenameLower, 'lagundi')) {
             $targetSpecies = 'Vitex negundo';
             $altSpecies = 'Vitex parviflora';
-        } elseif (str_contains($filenameLower, 'narra')) {
+        } elseif (str_contains($filenameLower, 'narra') || str_contains($filenameLower, 'tree_photo')) {
             $targetSpecies = 'Pterocarpus indicus';
             $altSpecies = 'Diospyros blancoí';
         } elseif (str_contains($filenameLower, 'katmon')) {
@@ -100,11 +100,20 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
         $altPlant = $stmtAlt->fetch(PDO::FETCH_ASSOC);
 
         $isMulti = count($imagePaths) > 1;
+        $isScreenshot = str_contains($filenameLower, 'screenshot') || str_contains($filenameLower, 'screen');
         $baseConfidence = $isMulti ? 94.0 : 88.0;
+
+        if ($isScreenshot) {
+            $baseConfidence = min(96.0, $baseConfidence + 1.5);
+        }
 
         if (!empty($metadata['province']) || !empty($metadata['location_found'])) {
             $baseConfidence = min(98.5, $baseConfidence + 2.5);
         }
+
+        $reasoningIntro = $isScreenshot
+            ? "AI vision isolated the plant subject from the screenshot frame. "
+            : "";
 
         $rawMock = [
             'identification_status' => 'identified',
@@ -115,7 +124,7 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
                 'genus' => $plant['genus'],
                 'species' => $plant['species'],
                 'confidence' => $baseConfidence,
-                'reasoning_summary' => "Diagnostic visual features confirm " . strtolower($plant['leaf_arrangement'] ?? 'alternate') . " leaf arrangement, serrated " . strtolower($plant['leaf_margin'] ?? 'toothed') . " margins, " . strtolower($plant['leaf_type'] ?? 'simple') . " blade, and " . strtolower($plant['venation'] ?? 'pinnate') . " venation characteristic of " . $plant['primary_common_name'] . " (" . $plant['scientific_name'] . ")."
+                'reasoning_summary' => $reasoningIntro . "Diagnostic visual features confirm " . strtolower($plant['leaf_arrangement'] ?? 'alternate') . " leaf arrangement, serrated " . strtolower($plant['leaf_margin'] ?? 'toothed') . " margins, " . strtolower($plant['leaf_type'] ?? 'simple') . " blade, and " . strtolower($plant['venation'] ?? 'pinnate') . " venation characteristic of " . $plant['primary_common_name'] . " (" . $plant['scientific_name'] . ")."
             ],
             'alternative_candidates' => [
                 [
@@ -129,7 +138,7 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
                 'Leaf type: ' . ($plant['leaf_type'] ?? 'Simple'),
                 'Arrangement: ' . ($plant['leaf_arrangement'] ?? 'Alternate'),
                 'Venation: ' . ($plant['venation'] ?? 'Pinnate'),
-                'Margin: ' . ($plant['leaf_margin'] ?? 'Serrated')
+                'Growth habit: ' . ($plant['growth_habit'] ?? 'Tree')
             ],
             'philippine_context' => [
                 'native_status' => $plant['native_status'],
@@ -139,7 +148,7 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
             'uses' => [
                 'ecological' => ['Habitat provision', 'Pioneer species'],
                 'agricultural' => ['Companion crop', 'Bio-pesticide'],
-                'traditional' => ['Traditional herbal tea preparation']
+                'traditional' => ['Traditional ethnobotanical preparation']
             ],
             'medicinal' => [
                 'classification' => 'YES',
@@ -155,7 +164,7 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
                 'status' => 'Least Concern (LC)'
             ],
             'verification' => [
-                'additional_photos_needed' => ['Crush leaf to confirm camphor aroma or photograph flower for 100% confirmation'],
+                'additional_photos_needed' => ['Photograph bark or flowers for 100% confirmation'],
                 'recommended_checks' => [
                     'Compare leaf margin serrations',
                     'Check leaf arrangement (Sambong is alternate, Banaba is opposite)',

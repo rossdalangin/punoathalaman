@@ -46,7 +46,7 @@ class OpenAIPlantIdentifier implements AIPlantIdentifierInterface
             [
                 'role' => 'user',
                 'content' => array_merge([
-                    ['type' => 'text', 'text' => 'Please analyze this plant image using botanical diagnostic features (leaf shape, arrangement, venation, bark, flower/fruit) and determine its species and Philippine context. Return JSON only.']
+                    ['type' => 'text', 'text' => 'Please analyze this plant or tree image (or screenshot) using botanical diagnostic features (leaf shape, arrangement, venation, bark, flower/fruit, tree habit) and determine its species and Philippine context. Return JSON only.']
                 ], $imageContent)
             ]
         ];
@@ -90,14 +90,13 @@ class OpenAIPlantIdentifier implements AIPlantIdentifierInterface
         $metaStr = json_encode($metadata);
         return <<<PROMPT
 You are a senior Philippine botanist, forester, and computer vision expert for "Puno at Halaman AI".
-Analyze image evidence using rigorous botanical diagnostic features to maximize identification accuracy for Philippine flora.
+Analyze image evidence (whether a camera photograph, field shot, or mobile screenshot) using rigorous botanical diagnostic features to maximize identification accuracy for Philippine flora.
 
-EXAMINE DIAGNOSTIC MORPHOLOGY CAREFULLY:
-1. LEAF TYPE & ARRANGEMENT: Simple vs Compound (Palmate, Pinnate, Trifoliate)? Opposite vs Alternate vs Fascicled?
-2. LEAF BLADE: Shape (elliptic, obovate, lanceolate, cordate), Apex (acuminate, acute, obtuse), Base (cuneate, cordate), Margin (entire, serrate, coarsely toothed).
-3. LEAF VENATION: Pinnate, Palmate, Parallel, or Scabrous white hairy texture.
-4. STEM / BARK: Smooth, fissured, flaking, exuding red/milky sap.
-5. FLOWER / FRUIT: Petal count, color, inflorescence (spike, panicle), winged capsule, berry, or drupe.
+EXAMINE DIAGNOSTIC MORPHOLOGY & INPUT TYPES CAREFULLY:
+1. SCREENSHOT / PHOTO HANDLING: If the image is a screenshot or contains UI borders/text, ignore the screen frame and focus strictly on the plant or tree subject depicted.
+2. LEAF CLOSE-UPS: Examine blade shape (elliptic, obovate, lanceolate, cordate), arrangement (opposite, alternate, trifoliate, palmate), margins (entire, serrate, toothed), apex, base, and venation (pinnate, palmate, parallel, scabrous hairy).
+3. WHOLE TREE / HABIT: Examine trunk shape, bark texture (fissured, smooth, flaking, buttress roots), crown structure, branching pattern, exuding sap (red, milky, clear).
+4. REASONING ACCURACY: Carefully distinguish Sambong (Blumea balsamifera: alternate serrated hairy leaves) from Banaba (Lagerstroemia speciosa: opposite smooth thick leaves) and Lagundi (Vitex negundo: 5 palmate leaflets) from Molave (Vitex parviflora: 3 trifoliate leaflets).
 
 User Context & Environmental Hints: {$metaStr}
 
@@ -116,7 +115,7 @@ Return structured JSON strictly adhering to this schema:
     "genus": "Genus",
     "species": "species",
     "confidence": 0-100 score,
-    "reasoning_summary": "Detailed botanical diagnostic reasoning based on visible leaf morphology, arrangement, venation, and growth habit"
+    "reasoning_summary": "Detailed botanical diagnostic reasoning based on visible leaf morphology, tree habit, arrangement, venation, and bark structure"
   },
   "alternative_candidates": [
     {
@@ -126,7 +125,7 @@ Return structured JSON strictly adhering to this schema:
       "distinction_notes": ""
     }
   ],
-  "visible_features": ["Leaf arrangement", "Venation pattern", "Margin structure"],
+  "visible_features": ["Leaf arrangement", "Venation pattern", "Margin structure", "Tree habit"],
   "philippine_context": {
     "native_status": "NATIVE | ENDEMIC | INTRODUCED | NATURALIZED | INVASIVE | CULTIVATED | UNKNOWN",
     "distribution": "",

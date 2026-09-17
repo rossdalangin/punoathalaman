@@ -5,6 +5,7 @@ namespace Tests;
 use PHPUnit\Framework\TestCase;
 use App\AI\MockPlantIdentifier;
 use App\Helpers\Config;
+use App\Services\ImageQualityAnalyzer;
 
 class PlantIdentifierTest extends TestCase
 {
@@ -33,6 +34,26 @@ class PlantIdentifierTest extends TestCase
         $this->assertEquals('Blumea balsamifera', $result->primaryCandidate['scientific_name']);
         $this->assertEquals('Sambong', $result->primaryCandidate['common_name']);
         $this->assertGreaterThanOrEqual(85.0, $result->confidenceScore);
+    }
+
+    public function testMockIdentificationForPlantScreenshot(): void
+    {
+        $identifier = new MockPlantIdentifier();
+        $result = $identifier->identifyPlant(['storage/uploads/screenshot_plant.png']);
+
+        $this->assertEquals('identified', $result->status);
+        $this->assertNotNull($result->primaryCandidate);
+        $this->assertStringContainsString('AI vision isolated', $result->reasoningSummary);
+    }
+
+    public function testMockIdentificationForWholeTreePhoto(): void
+    {
+        $identifier = new MockPlantIdentifier();
+        $result = $identifier->identifyPlant(['storage/uploads/narra_tree_photo.jpg']);
+
+        $this->assertEquals('identified', $result->status);
+        $this->assertEquals('Pterocarpus indicus', $result->primaryCandidate['scientific_name']);
+        $this->assertEquals('Narra', $result->primaryCandidate['common_name']);
     }
 
     public function testMockIdentificationForPoisonousPlant(): void
