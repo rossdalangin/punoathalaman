@@ -58,8 +58,9 @@
 ### ⚠️ Common Error Solution: `vendor/autoload.php missing`
 If you encounter: `Fatal error: Uncaught Error: Failed opening required '.../vendor/autoload.php'`, you need to run `composer install` inside your project root folder to generate the vendor dependencies.
 
-### Windows / XAMPP Installation Instructions
-See detailed step-by-step XAMPP setup guide in [docs/INSTALLATION_XAMPP.md](docs/INSTALLATION_XAMPP.md).
+### Deployment Guides:
+- 📖 [Windows / XAMPP Installation Guide](docs/INSTALLATION_XAMPP.md)
+- 📖 [cPanel Shared Hosting Deployment Guide](docs/INSTALLATION_CPANEL.md)
 
 ### Linux / macOS / General Installation
 1. **Requirements:** PHP 8.2+, MySQL/MariaDB, Composer.
