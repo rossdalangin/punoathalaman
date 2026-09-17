@@ -367,6 +367,140 @@ class SeedDatabase
                 ]
             ],
             [
+                'scientific_name' => 'Senna alata',
+                'primary_common_name' => 'Akapulko',
+                'kingdom' => 'Plantae',
+                'family' => 'Fabaceae',
+                'genus' => 'Senna',
+                'species' => 'alata',
+                'native_status' => 'NATURALIZED',
+                'habitat' => 'Open fields, village borders, waste ground, and river banks.',
+                'philippine_distribution' => 'Widespread in all provinces of the Philippines.',
+                'elevation_range' => '0 - 800 m above sea level',
+                'forest_type' => 'Disturbed open secondary scrub and thickets',
+                'leaf_type' => 'Pinnately compound with 8-14 pairs of large oblong leaflets',
+                'leaf_arrangement' => 'Alternate',
+                'leaf_margin' => 'Entire',
+                'leaf_apex' => 'Rounded to emarginate',
+                'leaf_base' => 'Oblique',
+                'venation' => 'Pinnate',
+                'growth_habit' => 'Coarse erect shrub 1-4 meters tall with thick green stems',
+                'bark_description' => 'Smooth greenish-brown bark.',
+                'flower_description' => 'Bright yellow erect candle-like spikes (terminal racemes).',
+                'fruit_description' => 'Straight papery pod with prominent longitudinal wings containing flat triangular seeds.',
+                'distinctive_markings' => 'Bright golden candle-shaped flower spikes; winged pods; crushed leaf antifungal remedy.',
+                'names' => [
+                    ['name' => 'Akapulko', 'type' => 'tagalog', 'region' => 'National'],
+                    ['name' => 'Ringworm Bush / Candle Bush', 'type' => 'english', 'region' => 'International'],
+                    ['name' => 'Biyas-biyasan', 'type' => 'local', 'region' => 'Tagalog'],
+                    ['name' => 'Kuntas', 'type' => 'local', 'region' => 'Ilocos'],
+                    ['name' => 'Santing', 'type' => 'regional', 'region' => 'Visayas']
+                ],
+                'uses' => [
+                    ['category' => 'ecological', 'title' => 'Pollinator & Soil Shrub', 'description' => 'Flowers attract native carpenter bees and butterflies.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'agricultural', 'title' => 'Ornamental & Natural Antifungal', 'description' => 'Planted in herbal yards for antifungal leaf juice extraction.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'traditional', 'title' => 'Skin Fungal Poultice', 'description' => 'Fresh crushed leaves rubbed directly onto skin for tinea flava, ringworm, and scabies.', 'evidence' => 'TRADITIONAL_USE_ONLY'],
+                    ['category' => 'scientific', 'title' => 'Antifungal Chrysophanic Acid Efficacy', 'description' => 'DOH-PITAHC officially approved herbal drug for skin fungal infections (tinea versicolor, eczema).', 'evidence' => 'ESTABLISHED']
+                ],
+                'medicinal' => [
+                    'is_recognized_medicinal' => 'YES',
+                    'traditional_uses_text' => 'Fresh crushed leaves applied topically for ringworm, athlete\'s foot, and skin rashes.',
+                    'scientific_evidence_text' => 'DOH-PITAHC approved primary herbal medicine. Chrysophanic acid and anthraquinones demonstrate potent antifungal activity.',
+                    'active_compounds' => 'Chrysophanic acid, emodin, aloe-emodin, rhein, kaempferol.',
+                    'known_risks' => 'Mild local skin irritation in rare hypersensitive individuals.',
+                    'known_interactions' => 'None documented for topical use.',
+                    'toxic_parts' => 'Seeds contain anthraquinones that act as strong purgatives if ingested.',
+                    'preparation_risks' => 'FOR EXTERNAL TOPICAL USE ONLY. Do not ingest fresh leaf decoctions in high doses.'
+                ],
+                'safety' => [
+                    'safety_category' => 'SAFE_FOR_GENERAL_CONTACT',
+                    'primary_warning' => 'Apply extract topically. Avoid contact with eyes or open deep wounds.',
+                    'toxic_parts' => 'Concentrated seed extracts.',
+                    'look_alike_species' => 'Senna occidentalis (Balatong-aso)',
+                    'look_alike_distinction' => 'Senna occidentalis has pointed leaf apices and unwinged cylindrical pods, lacking the erect dense candle-like flower spike.',
+                    'warning_text' => 'TOPICAL APPLICATION ONLY FOR SKIN FUNGAL TREATMENT.'
+                ],
+                'conservation' => [
+                    'iucn_status' => 'Least Concern (LC)',
+                    'denr_status' => 'Not Listed',
+                    'threatened_status' => 'Abundant / Naturalized',
+                    'protected_status' => 'Commonly Cultivated',
+                    'cites_status' => 'Not Listed',
+                    'collection_restrictions' => 'Widespread in domestic herbal gardens.'
+                ],
+                'sources' => [
+                    ['name' => 'DOH PITAHC 10 Medicinal Plants Pharmacopeia', 'url' => 'https://pitahc.gov.ph', 'type' => 'government'],
+                    ['name' => 'Plants of the World Online (POWO - Senna alata)', 'url' => 'https://powo.science.kew.org', 'type' => 'database']
+                ]
+            ],
+            [
+                'scientific_name' => 'Carmona retusa',
+                'primary_common_name' => 'Tsaang Gubat',
+                'kingdom' => 'Plantae',
+                'family' => 'Boraginaceae',
+                'genus' => 'Carmona',
+                'species' => 'retusa',
+                'native_status' => 'NATIVE',
+                'habitat' => 'Secondary forests, dry thickets, brushlands, and lowland plains.',
+                'philippine_distribution' => 'Luzon, Mindoro, Masbate, Cebu, Negros, Bohol, Mindanao.',
+                'elevation_range' => '0 - 800 m above sea level',
+                'forest_type' => 'Dry secondary scrub and forest margins',
+                'leaf_type' => 'Simple, small (1-5cm), obovate, clustered in fascicles',
+                'leaf_arrangement' => 'Alternate or fascicled',
+                'leaf_margin' => 'Coarsely 3-5 toothed towards the apex',
+                'leaf_apex' => 'Obtuse to 3-lobed',
+                'leaf_base' => 'Cuneate',
+                'venation' => 'Pinnate, leaves rough with scabrous short white bristles',
+                'growth_habit' => 'Erect densely branched shrub 1-4 meters tall',
+                'bark_description' => 'Grayish-brown, slender twiggy branching.',
+                'flower_description' => 'Small white 5-lobed star-shaped flowers in axillary cymes.',
+                'fruit_description' => 'Small globose fleshy red or yellow drupe containing a 4-seeded nutlet.',
+                'distinctive_markings' => 'Small thick dark green leaves with 3-5 teeth at tip and rough sandpaper-like white hairy texture; small white star flowers.',
+                'names' => [
+                    ['name' => 'Tsaang Gubat', 'type' => 'tagalog', 'region' => 'National'],
+                    ['name' => 'Wild Tea / Fukien Tea Tree', 'type' => 'english', 'region' => 'International'],
+                    ['name' => 'Alangitngit', 'type' => 'tagalog', 'region' => 'Southern Tagalog'],
+                    ['name' => 'Gitingan', 'type' => 'local', 'region' => 'Ilocos'],
+                    ['name' => 'Kalimugong', 'type' => 'regional', 'region' => 'Visayas']
+                ],
+                'uses' => [
+                    ['category' => 'ecological', 'title' => 'Scrubland Habitat & Bird Food', 'description' => 'Fleshy drupe fruits provide food for wild native birds.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'agricultural', 'title' => 'Bonsai & Living Hedge', 'description' => 'Popular ornamental bonsai shrub and traditional living perimeter hedge.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'traditional', 'title' => 'Postpartum & Diarrhea Tea', 'description' => 'Leaf decoction consumed as a traditional tea for stomach pain, diarrhea, and mouth rinse.', 'evidence' => 'TRADITIONAL_USE_ONLY'],
+                    ['category' => 'scientific', 'title' => 'Spasmolytic & Anti-allergy Tea', 'description' => 'DOH-PITAHC approved primary medicine for colic stomach pain, diarrhea, and oral gargle.', 'evidence' => 'ESTABLISHED']
+                ],
+                'medicinal' => [
+                    'is_recognized_medicinal' => 'YES',
+                    'traditional_uses_text' => 'Boiled leaves taken for stomach ache, abdominal cramps, diarrhea, and used as a fluoride mouth gargle.',
+                    'scientific_evidence_text' => 'DOH-PITAHC approved primary herbal drug. Demonstrates spasmolytic action on smooth intestinal muscle and antibacterial activity against dental plaque.',
+                    'active_compounds' => 'Rosmarinic acid, microphyllone, triterpenes (α- and β-amyrin), nitidine.',
+                    'known_risks' => 'None documented under standard decoction dosage.',
+                    'known_interactions' => 'No adverse drug interactions reported.',
+                    'toxic_parts' => 'None.',
+                    'preparation_risks' => 'Wash leaves before boiling.'
+                ],
+                'safety' => [
+                    'safety_category' => 'SAFE_FOR_GENERAL_CONTACT',
+                    'primary_warning' => 'Severe persistent bloody dysentery requires clinical medical evaluation.',
+                    'toxic_parts' => 'None.',
+                    'look_alike_species' => 'Premna odorata (Alagaw)',
+                    'look_alike_distinction' => 'Premna odorata has much larger leaves (8-20cm) with a aromatic aromatic scent, unlike the tiny sandpaper-textured leaves of Tsaang Gubat.',
+                    'warning_text' => 'VERIFY LEAF SIZE (TSAANG GUBAT LEAVES ARE SMALL 1-4 CM).'
+                ],
+                'conservation' => [
+                    'iucn_status' => 'Least Concern (LC)',
+                    'denr_status' => 'Not Listed',
+                    'threatened_status' => 'Safe',
+                    'protected_status' => 'Commonly Cultivated',
+                    'cites_status' => 'Not Listed',
+                    'collection_restrictions' => 'Propagated readily via stem cuttings.'
+                ],
+                'sources' => [
+                    ['name' => 'DOH PITAHC Approved Medicinal Plants', 'url' => 'https://pitahc.gov.ph', 'type' => 'government'],
+                    ['name' => 'NIRPROMP Pharmacological Studies', 'url' => 'https://upm.edu.ph', 'type' => 'academic']
+                ]
+            ],
+            [
                 'scientific_name' => 'Jatropha curcas',
                 'primary_common_name' => 'Tubang Bakod',
                 'kingdom' => 'Plantae',
@@ -431,6 +565,140 @@ class SeedDatabase
                 'sources' => [
                     ['name' => 'Toxic Plants of the Philippines Reference Manual', 'url' => 'https://doh.gov.ph', 'type' => 'government'],
                     ['name' => 'World Health Organization Poison Information Monograph - Jatropha curcas', 'url' => 'https://who.int', 'type' => 'publication']
+                ]
+            ],
+            [
+                'scientific_name' => 'Diospyros blancoí',
+                'primary_common_name' => 'Kamagong',
+                'kingdom' => 'Plantae',
+                'family' => 'Ebenaceae',
+                'genus' => 'Diospyros',
+                'species' => 'blancoí',
+                'native_status' => 'NATIVE',
+                'habitat' => 'Primary and secondary lowland forests at low altitudes.',
+                'philippine_distribution' => 'Luzon, Mindoro, Palawan, Leyte, Samar, Panay, Mindanao.',
+                'elevation_range' => '0 - 800 m above sea level',
+                'forest_type' => 'Lowland evergreen rainforest',
+                'leaf_type' => 'Simple, thick, oblong, dark glossy green upper side and velvety silky hairy golden underside',
+                'leaf_arrangement' => 'Alternate',
+                'leaf_margin' => 'Entire',
+                'leaf_apex' => 'Acute to acuminate',
+                'leaf_base' => 'Rounded to attenuate',
+                'venation' => 'Pinnate',
+                'growth_habit' => 'Large hardwood evergreen tree 20-33 meters tall with dense dark crown',
+                'bark_description' => 'Dark brown to jet black, deeply fissured outer bark.',
+                'flower_description' => 'Creamy-white 4-petaled fragrant flowers.',
+                'fruit_description' => 'Globose fruit (Mabolo) covered in dense reddish-brown velvet hairs containing sweet reddish-white aromatic flesh.',
+                'distinctive_markings' => 'Jet-black iron-wood heartwood (Ironwood); velvet-hairy edible Mabolo fruit; golden silky leaf underside.',
+                'names' => [
+                    ['name' => 'Kamagong', 'type' => 'tagalog', 'region' => 'National'],
+                    ['name' => 'Mabolo / Velvet Apple', 'type' => 'english', 'region' => 'International'],
+                    ['name' => 'Ironwood (Philippine)', 'type' => 'english', 'region' => 'International'],
+                    ['name' => 'Amaga', 'type' => 'local', 'region' => 'Bicol'],
+                    ['name' => 'Talang', 'type' => 'regional', 'region' => 'Pampanga']
+                ],
+                'uses' => [
+                    ['category' => 'ecological', 'title' => 'Keystone Forest Canopy & Frugivore Food', 'description' => 'Velvet apple fruits feed Philippine fruit bats, birds, and civets.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'agricultural', 'title' => 'Precious Hardwood & Edible Fruit', 'description' => 'Famous black heartwood used for traditional carving, arnis sticks, and fine art; fruits eaten fresh.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'traditional', 'title' => 'Bark Infusion for Diarrhea', 'description' => 'Bark decoction traditionally used as an astringent gargle and for intestinal cramps.', 'evidence' => 'TRADITIONAL_USE_ONLY'],
+                    ['category' => 'scientific', 'title' => 'Antimicrobial Triterpenoids', 'description' => 'Lupeol, betulin, and amyrin compounds isolated from bark exhibit antibacterial activity.', 'evidence' => 'SUPPORTED_BY_SOME_RESEARCH']
+                ],
+                'medicinal' => [
+                    'is_recognized_medicinal' => 'TRADITIONALLY_USED',
+                    'traditional_uses_text' => 'Bark and unripe fruit decoctions used traditionally for diarrhea, dysentery, and skin washing.',
+                    'scientific_evidence_text' => 'Phytochemical screening reveals high tannins, lupeol, and betulinic acid with anti-inflammatory properties.',
+                    'active_compounds' => 'Lupeol, betulin, β-sitosterol, plumbagin, tannins.',
+                    'known_risks' => 'Unripe fruits contain high tannin concentrations causing astringent oral irritation.',
+                    'known_interactions' => 'None reported.',
+                    'toxic_parts' => 'Hairs on outer skin of fruit can irritate skin and throat if not rubbed off before eating.',
+                    'preparation_risks' => 'Peel and rub off velvety surface hairs before consuming fruit.'
+                ],
+                'safety' => [
+                    'safety_category' => 'SAFE_FOR_GENERAL_CONTACT',
+                    'primary_warning' => 'PROTECTED NATIVE TREE: Wild harvesting of Kamagong timber is strictly regulated under DENR forestry conservation laws.',
+                    'toxic_parts' => 'Irritating velvet hairs on fruit outer skin.',
+                    'look_alike_species' => 'Diospyros ebenum (Ceylon Ebony)',
+                    'look_alike_distinction' => 'Diospyros ebenum lacks the distinctive reddish velvet hairy fruit (Mabolo) and silvery-golden leaf underside of D. blancoí.',
+                    'warning_text' => 'PROTECTED SPECIES. RUB OFF FRUIT HAIRS BEFORE EATING MABOLO.'
+                ],
+                'conservation' => [
+                    'iucn_status' => 'Vulnerable (VU)',
+                    'denr_status' => 'Threatened Species (DAO 2017-11)',
+                    'threatened_status' => 'Threatened by historic over-logging for precious timber',
+                    'protected_status' => 'Protected Native Hardwood',
+                    'cites_status' => 'Not Listed',
+                    'collection_restrictions' => 'Cutting wild trees requires DENR permits.'
+                ],
+                'sources' => [
+                    ['name' => 'DENR Administrative Order DAO 2017-11', 'url' => 'https://bmb.gov.ph', 'type' => 'government'],
+                    ['name' => 'IUCN Red List - Diospyros blancoí', 'url' => 'https://www.iucnredlist.org', 'type' => 'database']
+                ]
+            ],
+            [
+                'scientific_name' => 'Vitex parviflora',
+                'primary_common_name' => 'Molave',
+                'kingdom' => 'Plantae',
+                'family' => 'Lamiaceae',
+                'genus' => 'Vitex',
+                'species' => 'parviflora',
+                'native_status' => 'NATIVE',
+                'habitat' => 'Lowland limestone forests, dry coastal hills, and open secondary woods.',
+                'philippine_distribution' => 'Widespread across Luzon, Mindoro, Cebu, Bohol, Leyte, Samar, Mindanao.',
+                'elevation_range' => '0 - 700 m above sea level',
+                'forest_type' => 'Molave forest on limestone (Karst formations)',
+                'leaf_type' => 'Trifoliate compound leaf with 3 lanceolate glossy leaflets',
+                'leaf_arrangement' => 'Opposite',
+                'leaf_margin' => 'Entire',
+                'leaf_apex' => 'Acuminate',
+                'leaf_base' => 'Cuneate',
+                'venation' => 'Pinnate',
+                'growth_habit' => 'Medium to large tree 15-30 meters tall with crooked fluted trunk and yellowish wood',
+                'bark_description' => 'Light gray to yellowish-brown, smooth or shedding in thin scales.',
+                'flower_description' => 'Blue to pale violet small flowers in terminal panicles.',
+                'fruit_description' => 'Small globose succulent purplish-black drupe.',
+                'distinctive_markings' => 'Trifoliate leaves (strictly 3 leaflets); yellowish durable wood turning olive green when submerged in water.',
+                'names' => [
+                    ['name' => 'Molave', 'type' => 'tagalog', 'region' => 'National'],
+                    ['name' => 'Small-flower Chaste Tree', 'type' => 'english', 'region' => 'International'],
+                    ['name' => 'Tugas', 'type' => 'local', 'region' => 'Visayas'],
+                    ['name' => 'Sagad', 'type' => 'local', 'region' => 'Ilocos'],
+                    ['name' => 'Hamurawon', 'type' => 'regional', 'region' => 'Bicol/Samar']
+                ],
+                'uses' => [
+                    ['category' => 'ecological', 'title' => 'Limestone Karst Indicator & Wildlife Habitat', 'description' => 'Key canopy tree species in native limestone forests, preventing soil erosion on karst hills.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'agricultural', 'title' => 'Ultra-Durable Timber & Watershed Tree', 'description' => 'Historic construction timber for railroad ties, bridges, and ship framing; vital native reforestation tree.', 'evidence' => 'ESTABLISHED'],
+                    ['category' => 'traditional', 'title' => 'Wood Shavings Tea for Wounds', 'description' => 'Wood bark decoction traditionally applied for wash on wounds and dropsy.', 'evidence' => 'TRADITIONAL_USE_ONLY'],
+                    ['category' => 'scientific', 'title' => 'Limonoid & Flavonoid Content', 'description' => 'Phytochemical analysis confirms presence of vitexin and iridoid glycosides.', 'evidence' => 'PRELIMINARY_EVIDENCE']
+                ],
+                'medicinal' => [
+                    'is_recognized_medicinal' => 'TRADITIONALLY_USED',
+                    'traditional_uses_text' => 'Wood shavings or bark decoction used traditionally for cleansing wounds and treating poison bites.',
+                    'scientific_evidence_text' => 'Contains iridoids and vitexin flavonoids with mild antioxidant and anti-inflammatory activity.',
+                    'active_compounds' => 'Vitexin, casticin, iridoid glycosides.',
+                    'known_risks' => 'None documented.',
+                    'known_interactions' => 'None reported.',
+                    'toxic_parts' => 'None.',
+                    'preparation_risks' => 'Do not damage wild living trunks.'
+                ],
+                'safety' => [
+                    'safety_category' => 'SAFE_FOR_GENERAL_CONTACT',
+                    'primary_warning' => 'PROTECTED SPECIES: Wild Molave trees in limestone forests are protected under Philippine environmental laws.',
+                    'toxic_parts' => 'None.',
+                    'look_alike_species' => 'Vitex negundo (Lagundi)',
+                    'look_alike_distinction' => 'Lagundi has 5 leaflets (palmate) and smaller shrub habit, whereas Molave has strictly 3 leaflets (trifoliate) and grows as a large canopy tree.',
+                    'warning_text' => 'COUNT LEAFLETS (MOLAVE HAS 3 LEAFLETS, LAGUNDI HAS 5).'
+                ],
+                'conservation' => [
+                    'iucn_status' => 'Vulnerable (VU)',
+                    'denr_status' => 'Endangered / Protected Tree',
+                    'threatened_status' => 'Threatened by historical over-logging',
+                    'protected_status' => 'Strictly Protected Forestry Species',
+                    'cites_status' => 'Not Listed',
+                    'collection_restrictions' => 'Cutting wild trees prohibited without DENR permit.'
+                ],
+                'sources' => [
+                    ['name' => 'DENR Biodiversity Management Bureau Protected Flora', 'url' => 'https://bmb.gov.ph', 'type' => 'government'],
+                    ['name' => 'Philippine Native Tree Enthusiasts (PNTE Guide)', 'url' => 'https://pnte.org', 'type' => 'publication']
                 ]
             ]
         ];

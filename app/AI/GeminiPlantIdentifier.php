@@ -17,14 +17,14 @@ class GeminiPlantIdentifier implements AIPlantIdentifierInterface
 
     public function identifyPlant(array $imagePaths, array $metadata = []): AIResult
     {
-        if (empty($this->apiKey) || $this->apiKey === 'your_api_key_here') {
+        if (empty($this->apiKey) || $this->apiKey === 'your_api_key_here' || $this->apiKey === 'your_google_gemini_api_key_here') {
             $mock = new MockPlantIdentifier();
             return $mock->identifyPlant($imagePaths, $metadata);
         }
 
         $parts = [];
 
-        // Build system prompt and instructions
+        // Build enhanced diagnostic system prompt
         $promptText = $this->getSystemPrompt($metadata);
         $parts[] = ['text' => $promptText];
 
@@ -49,12 +49,11 @@ class GeminiPlantIdentifier implements AIPlantIdentifierInterface
                 ]
             ],
             'generationConfig' => [
-                'temperature' => 0.2,
+                'temperature' => 0.1,
                 'responseMimeType' => 'application/json'
             ]
         ];
 
-        // Google Gemini REST API endpoint (Supports gemini-2.0-flash, gemini-1.5-flash, gemini-flash free tier)
         $endpoint = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent?key={$this->apiKey}";
 
         $ch = curl_init($endpoint);
@@ -70,7 +69,6 @@ class GeminiPlantIdentifier implements AIPlantIdentifierInterface
         curl_close($ch);
 
         if ($httpCode !== 200 || !$response) {
-            // Try fallback model if specific version endpoint returned error
             if ($this->model !== 'gemini-1.5-flash') {
                 $fallbackEndpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$this->apiKey}";
                 $ch = curl_init($fallbackEndpoint);
@@ -92,7 +90,6 @@ class GeminiPlantIdentifier implements AIPlantIdentifierInterface
         $decoded = json_decode($response, true);
         $textOutput = $decoded['candidates'][0]['content']['parts'][0]['text'] ?? '{}';
 
-        // Clean markdown backticks if Gemini returns wrapped json string
         $textOutput = preg_replace('/^```json\s*|\s*```$/i', '', trim($textOutput));
         $jsonResult = json_decode($textOutput, true) ?: [];
 
@@ -104,32 +101,34 @@ class GeminiPlantIdentifier implements AIPlantIdentifierInterface
     {
         $metaStr = json_encode($metadata);
         return <<<PROMPT
-You are assisting with botanical plant identification for the Philippines ("Puno at Halaman AI").
-Analyze only observable visual features (leaves, bark, flowers, fruit, tree habit).
-Consider Philippine geographic context but do not assume that a plant is Philippine-native simply because the user is in the Philippines.
+You are a senior Philippine botanist, forester, and computer vision expert for "Puno at Halaman AI".
+Analyze image evidence using rigorous botanical diagnostic features to maximize identification accuracy for Philippine flora.
 
-User Metadata / Context: {$metaStr}
+EXAMINE DIAGNOSTIC MORPHOLOGY CAREFULLY:
+1. LEAF TYPE & ARRANGEMENT: Simple vs Compound (Palmate, Pinnate, Trifoliate)? Opposite vs Alternate vs Fascicled?
+2. LEAF BLADE: Shape (elliptic, obovate, lanceolate, cordate), Apex (acuminate, acute, obtuse), Base (cuneate, cordate), Margin (entire, serrate, coarsely toothed).
+3. LEAF VENATION: Pinnate, Palmate, Parallel, or Scabrous white hairy texture.
+4. STEM / BARK: Smooth, fissured, flaking, exuding red/milky sap.
+5. FLOWER / FRUIT: Petal count, color, inflorescence (spike, panicle), winged capsule, berry, or drupe.
 
-Generate multiple candidate species when appropriate.
-Prioritize scientific accuracy over giving an answer.
-If the image does not contain sufficient diagnostic characteristics, explicitly state that identification is uncertain.
-Never claim certainty from a leaf photograph when multiple species cannot be distinguished visually.
-Separate botanical identification from medicinal information.
-Do not provide medical treatment recommendations or dosage.
-Separate traditional use from scientifically established evidence.
-Flag potentially poisonous species and dangerous look-alikes.
+User Context & Environmental Hints: {$metaStr}
+
+PHILIPPINE CONTEXT RULES:
+- Identify if native, endemic, naturalized, or introduced in the Philippines.
+- If identification is uncertain or multiple related species look identical from a leaf photo alone, specify low confidence and explain distinction.
+- Flag toxic plants and dangerous look-alikes immediately.
 
 Return structured JSON strictly adhering to this schema:
 {
   "identification_status": "identified | low_confidence | unable_to_identify | non_plant",
   "primary_candidate": {
     "scientific_name": "Genus species",
-    "common_name": "Primary English/Filipino Name",
+    "common_name": "Primary Common Name",
     "family": "Family Name",
     "genus": "Genus",
     "species": "species",
     "confidence": 0-100 score,
-    "reasoning_summary": "Explanation of visual markers"
+    "reasoning_summary": "Detailed botanical diagnostic reasoning based on visible leaf morphology, arrangement, venation, and growth habit"
   },
   "alternative_candidates": [
     {
@@ -139,7 +138,7 @@ Return structured JSON strictly adhering to this schema:
       "distinction_notes": ""
     }
   ],
-  "visible_features": ["leaf shape", "venation", "bark"],
+  "visible_features": ["Leaf arrangement", "Venation pattern", "Margin structure"],
   "philippine_context": {
     "native_status": "NATIVE | ENDEMIC | INTRODUCED | NATURALIZED | INVASIVE | CULTIVATED | UNKNOWN",
     "distribution": "",

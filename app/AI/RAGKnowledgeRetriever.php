@@ -21,7 +21,7 @@ class RAGKnowledgeRetriever
 
         $scientificName = trim($candidate['scientific_name']);
 
-        // Match exact or like scientific name in plants table
+        // Match exact or fuzzy scientific/common name in plants table
         $stmt = $pdo->prepare("SELECT * FROM plants WHERE scientific_name LIKE ? OR primary_common_name LIKE ? LIMIT 1");
         $stmt->execute(["%{$scientificName}%", "%{$scientificName}%"]);
         $dbPlant = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -66,6 +66,17 @@ class RAGKnowledgeRetriever
             $aiResult->primaryCandidate['genus'] = $dbPlant['genus'];
             $aiResult->primaryCandidate['species'] = $dbPlant['species'];
             $aiResult->primaryCandidate['local_names'] = $localNames;
+
+            // Diagnostic features verification check
+            $aiResult->primaryCandidate['diagnostic_leaf_morphology'] = [
+                'type' => $dbPlant['leaf_type'],
+                'arrangement' => $dbPlant['leaf_arrangement'],
+                'margin' => $dbPlant['leaf_margin'],
+                'apex' => $dbPlant['leaf_apex'],
+                'venation' => $dbPlant['venation'],
+                'growth_habit' => $dbPlant['growth_habit'],
+                'distinctive_markings' => $dbPlant['distinctive_markings']
+            ];
 
             $aiResult->philippineContext['native_status'] = $dbPlant['native_status'];
             $aiResult->philippineContext['distribution'] = $dbPlant['philippine_distribution'];

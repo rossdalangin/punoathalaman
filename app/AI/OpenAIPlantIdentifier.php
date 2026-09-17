@@ -3,7 +3,6 @@
 namespace App\AI;
 
 use App\Helpers\Config;
-use Exception;
 
 class OpenAIPlantIdentifier implements AIPlantIdentifierInterface
 {
@@ -19,7 +18,6 @@ class OpenAIPlantIdentifier implements AIPlantIdentifierInterface
     public function identifyPlant(array $imagePaths, array $metadata = []): AIResult
     {
         if (empty($this->apiKey) || $this->apiKey === 'your_api_key_here') {
-            // Fallback gracefully to Mock if key is missing
             $mock = new MockPlantIdentifier();
             return $mock->identifyPlant($imagePaths, $metadata);
         }
@@ -48,7 +46,7 @@ class OpenAIPlantIdentifier implements AIPlantIdentifierInterface
             [
                 'role' => 'user',
                 'content' => array_merge([
-                    ['type' => 'text', 'text' => 'Please identify the plant species in the provided image(s) and analyze its visible botanical features and Philippine context. Return JSON only.']
+                    ['type' => 'text', 'text' => 'Please analyze this plant image using botanical diagnostic features (leaf shape, arrangement, venation, bark, flower/fruit) and determine its species and Philippine context. Return JSON only.']
                 ], $imageContent)
             ]
         ];
@@ -57,7 +55,7 @@ class OpenAIPlantIdentifier implements AIPlantIdentifierInterface
             'model' => $this->model,
             'messages' => $messages,
             'response_format' => ['type' => 'json_object'],
-            'temperature' => 0.2,
+            'temperature' => 0.1,
             'max_tokens' => 2000
         ];
 
@@ -75,7 +73,6 @@ class OpenAIPlantIdentifier implements AIPlantIdentifierInterface
         curl_close($ch);
 
         if ($httpCode !== 200 || !$response) {
-            // Fallback on error
             $mock = new MockPlantIdentifier();
             return $mock->identifyPlant($imagePaths, $metadata);
         }
@@ -92,32 +89,34 @@ class OpenAIPlantIdentifier implements AIPlantIdentifierInterface
     {
         $metaStr = json_encode($metadata);
         return <<<PROMPT
-You are assisting with botanical identification for the Philippines ("Puno at Halaman AI").
-Analyze only observable evidence. Do not invent characteristics that cannot be seen.
-Consider Philippine geographic context but do not assume that a plant is Philippine-native simply because the user is in the Philippines.
+You are a senior Philippine botanist, forester, and computer vision expert for "Puno at Halaman AI".
+Analyze image evidence using rigorous botanical diagnostic features to maximize identification accuracy for Philippine flora.
 
-User Metadata / Context: {$metaStr}
+EXAMINE DIAGNOSTIC MORPHOLOGY CAREFULLY:
+1. LEAF TYPE & ARRANGEMENT: Simple vs Compound (Palmate, Pinnate, Trifoliate)? Opposite vs Alternate vs Fascicled?
+2. LEAF BLADE: Shape (elliptic, obovate, lanceolate, cordate), Apex (acuminate, acute, obtuse), Base (cuneate, cordate), Margin (entire, serrate, coarsely toothed).
+3. LEAF VENATION: Pinnate, Palmate, Parallel, or Scabrous white hairy texture.
+4. STEM / BARK: Smooth, fissured, flaking, exuding red/milky sap.
+5. FLOWER / FRUIT: Petal count, color, inflorescence (spike, panicle), winged capsule, berry, or drupe.
 
-Generate multiple candidate species when appropriate.
-Prioritize scientific accuracy over giving a definitive answer.
-If the image does not contain sufficient diagnostic characteristics, explicitly state that identification is uncertain.
-Never claim certainty from a leaf photograph when multiple species cannot be distinguished visually.
-Separate botanical identification from medicinal information.
-Do not provide medical treatment recommendations or dosage.
-Separate traditional use from scientifically established evidence.
-Flag potentially poisonous species and dangerous look-alikes.
+User Context & Environmental Hints: {$metaStr}
+
+PHILIPPINE CONTEXT RULES:
+- Identify if native, endemic, naturalized, or introduced in the Philippines.
+- If identification is uncertain or multiple related species look identical from a leaf photo alone, specify low confidence and explain distinction.
+- Flag toxic plants and dangerous look-alikes immediately.
 
 Return structured JSON strictly adhering to this schema:
 {
   "identification_status": "identified | low_confidence | unable_to_identify | non_plant",
   "primary_candidate": {
     "scientific_name": "Genus species",
-    "common_name": "Primary English/Filipino Name",
+    "common_name": "Primary Common Name",
     "family": "Family Name",
     "genus": "Genus",
     "species": "species",
     "confidence": 0-100 score,
-    "reasoning_summary": "Explanation of visual markers"
+    "reasoning_summary": "Detailed botanical diagnostic reasoning based on visible leaf morphology, arrangement, venation, and growth habit"
   },
   "alternative_candidates": [
     {
@@ -127,7 +126,7 @@ Return structured JSON strictly adhering to this schema:
       "distinction_notes": ""
     }
   ],
-  "visible_features": ["leaf shape", "venation", "bark"],
+  "visible_features": ["Leaf arrangement", "Venation pattern", "Margin structure"],
   "philippine_context": {
     "native_status": "NATIVE | ENDEMIC | INTRODUCED | NATURALIZED | INVASIVE | CULTIVATED | UNKNOWN",
     "distribution": "",
