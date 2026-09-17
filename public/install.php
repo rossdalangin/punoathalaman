@@ -2,7 +2,7 @@
 
 // Puno at Halaman AI - Web Installation Wizard
 error_reporting(E_ALL);
-ini_display_errors(1);
+ini_set('display_errors', 1);
 
 $lockFile = __DIR__ . '/../storage/installed.lock';
 if (file_exists($lockFile)) {
@@ -213,7 +213,7 @@ ENV;
         </div>
 
         <div style="text-align: center; margin-top: 24px;">
-            <a href="/" class="btn">🚀 Open Puno at Halaman AI Application</a>
+            <a href="./" class="btn">🚀 Open Puno at Halaman AI Application</a>
         </div>
     <?php endif; ?>
 </div>
