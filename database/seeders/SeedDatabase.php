@@ -1307,7 +1307,5 @@ class SeedDatabase
                 $stmtSrc->execute([$plantId, $src['name'], $src['url'], $src['type']]);
             }
         }
-
-        echo "Database seeded successfully!\n";
     }
 }
