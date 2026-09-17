@@ -36,19 +36,29 @@ class Database
                 }
             }
 
-            // Attempt primary MySQL connection
-            $hostsToTry = [$host];
+            // Connection credentials to attempt
+            $credentialSets = [
+                ['host' => $host, 'user' => $user, 'pass' => $pass],
+            ];
+
+            // If primary host is 127.0.0.1/localhost, try alternate hostname
             if ($host === '127.0.0.1') {
-                $hostsToTry[] = 'localhost';
+                $credentialSets[] = ['host' => 'localhost', 'user' => $user, 'pass' => $pass];
             } elseif ($host === 'localhost') {
-                $hostsToTry[] = '127.0.0.1';
+                $credentialSets[] = ['host' => '127.0.0.1', 'user' => $user, 'pass' => $pass];
+            }
+
+            // Fallback for XAMPP environments if custom user access fails
+            if ($user !== 'root') {
+                $credentialSets[] = ['host' => $host, 'user' => 'root', 'pass' => ''];
+                $credentialSets[] = ['host' => ($host === '127.0.0.1' ? 'localhost' : '127.0.0.1'), 'user' => 'root', 'pass' => ''];
             }
 
             $lastException = null;
-            foreach ($hostsToTry as $tryHost) {
+            foreach ($credentialSets as $cred) {
                 try {
-                    $dsn = "mysql:host={$tryHost};port={$port};dbname={$db};charset=utf8mb4";
-                    self::$instance = new PDO($dsn, $user, $pass, [
+                    $dsn = "mysql:host={$cred['host']};port={$port};dbname={$db};charset=utf8mb4";
+                    self::$instance = new PDO($dsn, $cred['user'], $cred['pass'], [
                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                         PDO::ATTR_EMULATE_PREPARES => false,
