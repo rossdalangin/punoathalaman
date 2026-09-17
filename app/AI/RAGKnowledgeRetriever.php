@@ -75,7 +75,17 @@ class RAGKnowledgeRetriever
                 'apex' => $dbPlant['leaf_apex'],
                 'venation' => $dbPlant['venation'],
                 'growth_habit' => $dbPlant['growth_habit'],
+                'bark_description' => $dbPlant['bark_description'],
+                'flower_description' => $dbPlant['flower_description'],
+                'fruit_description' => $dbPlant['fruit_description'],
                 'distinctive_markings' => $dbPlant['distinctive_markings']
+            ];
+
+            // Tree vs Leaf Diagnostic Identification Breakdown
+            $aiResult->primaryCandidate['tree_and_leaf_identification_guide'] = [
+                'leaf_key_check' => "Check leaf arrangement ({$dbPlant['leaf_arrangement']}), margin ({$dbPlant['leaf_margin']}), and venation ({$dbPlant['venation']}).",
+                'tree_habit_key_check' => "Check tree crown, bark texture ({$dbPlant['bark_description']}), and growth habit ({$dbPlant['growth_habit']}).",
+                'flower_fruit_key_check' => "Examine flowers ({$dbPlant['flower_description']}) and fruits ({$dbPlant['fruit_description']}) if available."
             ];
 
             $aiResult->philippineContext['native_status'] = $dbPlant['native_status'];
