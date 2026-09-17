@@ -86,6 +86,10 @@
 <div id="result-container" style="display: none;"></div>
 
 <script>
+function getApiUrl(endpoint) {
+    return 'index.php?r=' + endpoint.replace(/^\/+/, '');
+}
+
 let selectedMultiFiles = [];
 
 function handleSingleFileSelect(input) {
@@ -142,7 +146,7 @@ document.getElementById('identify-form').addEventListener('submit', async functi
     document.getElementById('btn-submit-id').disabled = true;
 
     try {
-        const res = await fetch(endpoint, {
+        const res = await fetch(getApiUrl(endpoint), {
             method: 'POST',
             body: formData
         });
@@ -263,7 +267,7 @@ async function requestExpertReview(identId) {
     fd.append('identification_id', identId);
     fd.append('notes', notes);
 
-    const res = await fetch('api/expert-review', { method: 'POST', body: fd });
+    const res = await fetch(getApiUrl('api/expert-review'), { method: 'POST', body: fd });
     const json = await res.json();
     alert(json.message || json.error);
 }

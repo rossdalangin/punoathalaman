@@ -85,17 +85,21 @@
 </div>
 
 <script>
+function getApiUrl(endpoint) {
+    return 'index.php?r=' + endpoint.replace(/^\/+/, '');
+}
+
 document.getElementById('login-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const fd = new FormData(this);
 
     try {
-        const res = await fetch('api/auth/login', { method: 'POST', body: fd });
+        const res = await fetch(getApiUrl('api/auth/login'), { method: 'POST', body: fd });
         const json = await res.json();
         if (json.success) {
             showAdminPanel();
         } else {
-            alert('Login failed: ' + json.error);
+            alert('Login failed: ' + (json.error || 'Unknown error'));
         }
     } catch (err) {
         alert('Authentication error: ' + err.message);
@@ -109,14 +113,14 @@ function showAdminPanel() {
 }
 
 async function logoutAdmin() {
-    await fetch('api/auth/logout', { method: 'POST' });
+    await fetch(getApiUrl('api/auth/logout'), { method: 'POST' });
     document.getElementById('admin-login-card').style.display = 'block';
     document.getElementById('admin-panel').style.display = 'none';
 }
 
 async function loadPlantsDirectory() {
     try {
-        const res = await fetch('api/plants');
+        const res = await fetch(getApiUrl('api/plants'));
         const data = await res.json();
         const container = document.getElementById('plants-table-container');
 
@@ -150,7 +154,7 @@ document.getElementById('add-plant-form').addEventListener('submit', async funct
     const fd = new FormData(this);
 
     try {
-        const res = await fetch('api/admin/plants', { method: 'POST', body: fd });
+        const res = await fetch(getApiUrl('api/admin/plants'), { method: 'POST', body: fd });
         const json = await res.json();
         if (json.success) {
             alert(json.message);

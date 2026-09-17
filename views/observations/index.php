@@ -72,8 +72,8 @@
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:16px;">
         <h3 class="section-title" style="margin-bottom:0;">Recent Field Observations</h3>
         <div>
-            <a href="api/observations/export?format=csv" class="btn btn-outline" style="font-size:0.85rem;">📥 Export CSV</a>
-            <a href="api/observations/export?format=json" class="btn btn-outline" style="font-size:0.85rem;">📥 Export JSON</a>
+            <a href="index.php?r=api/observations/export&format=csv" class="btn btn-outline" style="font-size:0.85rem;">📥 Export CSV</a>
+            <a href="index.php?r=api/observations/export&format=json" class="btn btn-outline" style="font-size:0.85rem;">📥 Export JSON</a>
         </div>
     </div>
 
@@ -83,6 +83,10 @@
 </div>
 
 <script>
+function getApiUrl(endpoint) {
+    return 'index.php?r=' + endpoint.replace(/^\/+/, '');
+}
+
 function escapeHtml(str) {
     if (!str) return '';
     return String(str)
@@ -98,7 +102,7 @@ document.getElementById('observation-form').addEventListener('submit', async fun
     const fd = new FormData(this);
 
     try {
-        const res = await fetch('api/observations', { method: 'POST', body: fd });
+        const res = await fetch(getApiUrl('api/observations'), { method: 'POST', body: fd });
         const json = await res.json();
         if (json.success) {
             alert(json.message);
@@ -114,7 +118,7 @@ document.getElementById('observation-form').addEventListener('submit', async fun
 
 async function loadObservations() {
     try {
-        const res = await fetch('api/observations');
+        const res = await fetch(getApiUrl('api/observations'));
         const data = await res.json();
         const listContainer = document.getElementById('observations-list');
 

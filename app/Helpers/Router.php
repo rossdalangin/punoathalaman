@@ -42,7 +42,7 @@ class Router
 
     public function dispatch(string $method, string $uri): void
     {
-        // Support fallback query parameter routing e.g. index.php?r=admin or ?route=admin
+        // Support fallback query parameter routing e.g. index.php?r=api/auth/login
         if (isset($_GET['r']) || isset($_GET['route'])) {
             $parsedUrl = '/' . ltrim($_GET['r'] ?? $_GET['route'], '/');
         } else {
@@ -93,7 +93,7 @@ class Router
         }
 
         // 404 Not Found
-        if (str_contains($path, '/api/')) {
+        if (str_contains($path, 'api/')) {
             header('Content-Type: application/json');
             http_response_code(404);
             echo json_encode(['error' => 'Endpoint not found', 'path' => $path]);
