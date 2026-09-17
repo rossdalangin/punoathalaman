@@ -8,6 +8,74 @@ use Exception;
 
 class AdminApiController
 {
+    public function getStats(): void
+    {
+        header('Content-Type: application/json');
+        $pdo = Database::getConnection();
+
+        $plantCount = $pdo->query("SELECT COUNT(*) FROM plants")->fetchColumn();
+        $pendingReviews = $pdo->query("SELECT COUNT(*) FROM plant_identifications WHERE status = 'PENDING_REVIEW' OR verified_by_expert = 0")->fetchColumn();
+        $obsCount = $pdo->query("SELECT COUNT(*) FROM plant_observations")->fetchColumn();
+        $sourceCount = $pdo->query("SELECT COUNT(*) FROM plant_sources")->fetchColumn();
+
+        echo json_encode([
+            'stats' => [
+                'total_plants' => (int)$plantCount,
+                'pending_reviews' => (int)$pendingReviews,
+                'total_observations' => (int)$obsCount,
+                'total_sources' => (int)$sourceCount
+            ]
+        ]);
+    }
+
+    public function getReviews(): void
+    {
+        header('Content-Type: application/json');
+        $pdo = Database::getConnection();
+
+        $stmt = $pdo->prepare("
+            SELECT i.id, i.confidence_score, i.confidence_level, i.reasoning_summary, i.status, i.expert_notes, i.created_at,
+                   p.scientific_name, p.primary_common_name
+            FROM plant_identifications i
+            LEFT JOIN plants p ON i.primary_plant_id = p.id
+            WHERE i.status = 'PENDING_REVIEW' OR i.status = 'AI_IDENTIFIED'
+            ORDER BY i.created_at DESC
+            LIMIT 50
+        ");
+        $stmt->execute();
+        $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode(['reviews' => $reviews]);
+    }
+
+    public function verifyReview(): void
+    {
+        header('Content-Type: application/json');
+
+        try {
+            $id = (int)($_POST['identification_id'] ?? 0);
+            if (!$id) {
+                throw new Exception("Identification ID is required.");
+            }
+
+            $pdo = Database::getConnection();
+            $stmt = $pdo->prepare("
+                UPDATE plant_identifications
+                SET status = 'VERIFIED', verified_by_expert = 1, expert_notes = ?
+                WHERE id = ?
+            ");
+            $stmt->execute(['Verified by expert botanist / forester on ' . date('Y-m-d H:i:s'), $id]);
+
+            echo json_encode([
+                'success' => true,
+                'message' => 'Plant identification request officially verified.'
+            ]);
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
     public function storePlant(): void
     {
         header('Content-Type: application/json');
@@ -62,8 +130,6 @@ class AdminApiController
 
         try {
             $pdo = Database::getConnection();
-
-            // Read JSON input or PUT/PATCH body
             $rawInput = file_get_contents('php://input');
             $data = json_decode($rawInput, true) ?: $_POST;
 
