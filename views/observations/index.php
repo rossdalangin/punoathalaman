@@ -8,6 +8,7 @@
 <div class="questionnaire-card">
     <h3 class="section-title">New Plant Observation Record</h3>
     <form id="observation-form">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(\App\Middleware\CsrfMiddleware::generateToken()) ?>">
         <div class="grid-2">
             <div class="form-group">
                 <label>Observer Name:</label>
@@ -82,6 +83,16 @@
 </div>
 
 <script>
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 document.getElementById('observation-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const fd = new FormData(this);
@@ -117,12 +128,12 @@ async function loadObservations() {
             html += `
                 <div class="fact-box">
                     <div style="display:flex; justify-content:space-between;">
-                        <strong>${obs.observation_code} - ${obs.observer_name}</strong>
-                        <span style="font-size:0.85rem; color:#666;">${obs.observation_date}</span>
+                        <strong>${escapeHtml(obs.observation_code)} - ${escapeHtml(obs.observer_name)}</strong>
+                        <span style="font-size:0.85rem; color:#666;">${escapeHtml(obs.observation_date)}</span>
                     </div>
-                    <p style="margin:4px 0;">📍 <strong>Location:</strong> ${obs.municipality}, ${obs.province} ${obs.barangay ? '('+obs.barangay+')' : ''}</p>
-                    <p style="margin:4px 0;">🌲 <strong>Habitat:</strong> ${obs.habitat || 'N/A'} ${obs.plant_height_m ? '| Height: ' + obs.plant_height_m + 'm' : ''}</p>
-                    ${obs.notes ? `<p style="font-style:italic; font-size:0.9rem; color:#444;">"${obs.notes}"</p>` : ''}
+                    <p style="margin:4px 0;">📍 <strong>Location:</strong> ${escapeHtml(obs.municipality)}, ${escapeHtml(obs.province)} ${obs.barangay ? '('+escapeHtml(obs.barangay)+')' : ''}</p>
+                    <p style="margin:4px 0;">🌲 <strong>Habitat:</strong> ${escapeHtml(obs.habitat) || 'N/A'} ${obs.plant_height_m ? '| Height: ' + escapeHtml(obs.plant_height_m) + 'm' : ''}</p>
+                    ${obs.notes ? `<p style="font-style:italic; font-size:0.9rem; color:#444;">"${escapeHtml(obs.notes)}"</p>` : ''}
                 </div>
             `;
         });
