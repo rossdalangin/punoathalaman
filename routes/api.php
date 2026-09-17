@@ -28,6 +28,9 @@ $router->post('/api/auth/logout', [App\Controllers\Api\AuthApiController::class,
 
 // Admin endpoints
 $router->get('/api/admin/stats', [App\Controllers\Api\AdminApiController::class, 'getStats']);
+$router->get('/api/admin/settings', [App\Controllers\Api\AdminApiController::class, 'getSettings']);
+$router->post('/api/admin/settings', [App\Controllers\Api\AdminApiController::class, 'saveSettings']);
+$router->post('/api/admin/reseed', [App\Controllers\Api\AdminApiController::class, 'reseedDatabase']);
 $router->get('/api/admin/reviews', [App\Controllers\Api\AdminApiController::class, 'getReviews']);
 $router->post('/api/admin/reviews/verify', [App\Controllers\Api\AdminApiController::class, 'verifyReview']);
 $router->post('/api/admin/plants', [App\Controllers\Api\AdminApiController::class, 'storePlant'], [App\Middleware\AuthMiddleware::class]);

@@ -2,7 +2,9 @@
 
 namespace App\Controllers\Api;
 
+use App\Helpers\Config;
 use App\Helpers\Database;
+use Database\Seeders\SeedDatabase;
 use PDO;
 use Exception;
 
@@ -17,15 +19,100 @@ class AdminApiController
         $pendingReviews = $pdo->query("SELECT COUNT(*) FROM plant_identifications WHERE status = 'PENDING_REVIEW' OR verified_by_expert = 0")->fetchColumn();
         $obsCount = $pdo->query("SELECT COUNT(*) FROM plant_observations")->fetchColumn();
         $sourceCount = $pdo->query("SELECT COUNT(*) FROM plant_sources")->fetchColumn();
+        $activeProvider = Config::get('AI_PROVIDER', 'gemini');
 
         echo json_encode([
             'stats' => [
                 'total_plants' => (int)$plantCount,
                 'pending_reviews' => (int)$pendingReviews,
                 'total_observations' => (int)$obsCount,
-                'total_sources' => (int)$sourceCount
+                'total_sources' => (int)$sourceCount,
+                'active_provider' => strtoupper($activeProvider)
             ]
         ]);
+    }
+
+    public function getSettings(): void
+    {
+        header('Content-Type: application/json');
+
+        echo json_encode([
+            'settings' => [
+                'ai_provider' => Config::get('AI_PROVIDER', 'gemini'),
+                'ai_model' => Config::get('AI_MODEL', 'gemini-2.0-flash'),
+                'ai_api_key' => Config::get('AI_API_KEY', ''),
+                'max_upload_size_mb' => Config::get('MAX_UPLOAD_SIZE_MB', '10'),
+            ]
+        ]);
+    }
+
+    public function saveSettings(): void
+    {
+        header('Content-Type: application/json');
+
+        try {
+            $provider = trim($_POST['ai_provider'] ?? 'gemini');
+            $model = trim($_POST['ai_model'] ?? 'gemini-2.0-flash');
+            $apiKey = trim($_POST['ai_api_key'] ?? '');
+            $maxUpload = (int)($_POST['max_upload_size_mb'] ?? 10);
+
+            $envPath = __DIR__ . '/../../../.env';
+            if (file_exists($envPath)) {
+                $lines = file($envPath, FILE_IGNORE_NEW_LINES);
+                $newLines = [];
+                $keysUpdated = ['AI_PROVIDER' => false, 'AI_MODEL' => false, 'AI_API_KEY' => false, 'MAX_UPLOAD_SIZE_MB' => false];
+
+                foreach ($lines as $line) {
+                    if (str_starts_with(trim($line), 'AI_PROVIDER=')) {
+                        $newLines[] = "AI_PROVIDER={$provider}";
+                        $keysUpdated['AI_PROVIDER'] = true;
+                    } elseif (str_starts_with(trim($line), 'AI_MODEL=')) {
+                        $newLines[] = "AI_MODEL={$model}";
+                        $keysUpdated['AI_MODEL'] = true;
+                    } elseif (str_starts_with(trim($line), 'AI_API_KEY=')) {
+                        $newLines[] = "AI_API_KEY={$apiKey}";
+                        $keysUpdated['AI_API_KEY'] = true;
+                    } elseif (str_starts_with(trim($line), 'MAX_UPLOAD_SIZE_MB=')) {
+                        $newLines[] = "MAX_UPLOAD_SIZE_MB={$maxUpload}";
+                        $keysUpdated['MAX_UPLOAD_SIZE_MB'] = true;
+                    } else {
+                        $newLines[] = $line;
+                    }
+                }
+
+                if (!$keysUpdated['AI_PROVIDER']) $newLines[] = "AI_PROVIDER={$provider}";
+                if (!$keysUpdated['AI_MODEL']) $newLines[] = "AI_MODEL={$model}";
+                if (!$keysUpdated['AI_API_KEY']) $newLines[] = "AI_API_KEY={$apiKey}";
+                if (!$keysUpdated['MAX_UPLOAD_SIZE_MB']) $newLines[] = "MAX_UPLOAD_SIZE_MB={$maxUpload}";
+
+                file_put_contents($envPath, implode("\n", $newLines));
+                Config::loadEnv($envPath);
+            }
+
+            echo json_encode([
+                'success' => true,
+                'message' => 'System & AI Settings updated successfully.'
+            ]);
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function reseedDatabase(): void
+    {
+        header('Content-Type: application/json');
+
+        try {
+            SeedDatabase::run();
+            echo json_encode([
+                'success' => true,
+                'message' => 'Philippine Flora Database successfully re-seeded.'
+            ]);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
     }
 
     public function getReviews(): void

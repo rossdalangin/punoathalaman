@@ -15,7 +15,7 @@
 <!-- Login Box if unauthenticated -->
 <div id="admin-login-card" class="hero-card" style="max-width: 420px; margin: 0 auto;">
     <h3 class="hero-title" style="font-size: 1.4rem; text-align: center;">Administrator Authentication</h3>
-    <p style="text-align:center; font-size:0.88rem; color:#555; margin-bottom:20px;">Sign in to access species curation and review tools.</p>
+    <p style="text-align:center; font-size:0.88rem; color:#555; margin-bottom:20px;">Sign in to access species curation, settings, and review tools.</p>
     <form id="login-form">
         <div class="form-group">
             <label>Email Address:</label>
@@ -56,10 +56,10 @@
             </div>
         </div>
         <div class="metric-card">
-            <div class="metric-icon">📚</div>
+            <div class="metric-icon">⚙️</div>
             <div>
-                <div class="metric-val" id="stat-sources-count">0</div>
-                <div class="metric-label">Scientific Reference Sources</div>
+                <div class="metric-val" id="stat-active-provider" style="font-size:1.2rem; text-transform:uppercase;">MOCK</div>
+                <div class="metric-label">Active AI Provider</div>
             </div>
         </div>
     </div>
@@ -69,6 +69,7 @@
         <button type="button" class="tab-btn active" onclick="switchAdminTab('tab-species', this)">🌱 Species Directory</button>
         <button type="button" class="tab-btn" onclick="switchAdminTab('tab-add-plant', this)">➕ Add New Species</button>
         <button type="button" class="tab-btn" onclick="switchAdminTab('tab-reviews', this)">👨‍🌾 Expert Review Queue</button>
+        <button type="button" class="tab-btn" onclick="switchAdminTab('tab-settings', this)">⚙️ System Settings</button>
         <button type="button" class="tab-btn" onclick="switchAdminTab('tab-sources', this)">📚 Sources & References</button>
     </div>
 
@@ -173,7 +174,56 @@
         </div>
     </div>
 
-    <!-- TAB 4: Sources & References -->
+    <!-- TAB 4: System Settings -->
+    <div id="tab-settings" class="tab-content">
+        <div class="hero-card">
+            <h3 class="section-title">⚙️ System Configuration & AI Settings</h3>
+            <form id="settings-form">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Active AI Provider:</label>
+                        <select id="setting-ai-provider" name="ai_provider" class="form-control">
+                            <option value="gemini">Google Gemini AI (gemini-2.0-flash / gemini-1.5-flash Free Tier)</option>
+                            <option value="openai">OpenAI (GPT-4o Vision API)</option>
+                            <option value="mock">Mock Offline Provider (Testing / Zero Key)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Active AI Model Name:</label>
+                        <input type="text" id="setting-ai-model" name="ai_model" class="form-control" value="gemini-2.0-flash">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>AI API Key:</label>
+                    <input type="text" id="setting-ai-key" name="ai_api_key" class="form-control" placeholder="Paste OpenAI or Google Gemini API Key">
+                </div>
+
+                <hr style="margin: 20px 0; border:0; border-top:1px solid var(--border);">
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Max Image Upload Size (MB):</label>
+                        <input type="number" id="setting-max-upload" name="max_upload_size_mb" class="form-control" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label>Field Observations Public Submission:</label>
+                        <select id="setting-public-obs" name="public_observations" class="form-control">
+                            <option value="enabled">Enabled (Open to Public Logging)</option>
+                            <option value="disabled">Disabled (Admin & Experts Only)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:20px;">
+                    <button type="submit" class="btn btn-primary">💾 Save System Settings</button>
+                    <button type="button" class="btn btn-warning" onclick="reseedFloraDatabase()">🌱 Re-Seed Philippine Flora Database</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TAB 5: Sources & References -->
     <div id="tab-sources" class="tab-content">
         <div class="hero-card" style="padding:20px;">
             <h3 class="section-title">Authoritative Sources & Citations</h3>
@@ -233,6 +283,7 @@ function showAdminPanel() {
     loadDashboardStats();
     loadPlantsDirectory();
     loadExpertReviews();
+    loadAdminSettings();
     loadSources();
 }
 
@@ -251,7 +302,7 @@ async function loadDashboardStats() {
             document.getElementById('stat-plant-count').innerText = data.stats.total_plants || 0;
             document.getElementById('stat-review-count').innerText = data.stats.pending_reviews || 0;
             document.getElementById('stat-obs-count').innerText = data.stats.total_observations || 0;
-            document.getElementById('stat-sources-count').innerText = data.stats.total_sources || 0;
+            document.getElementById('stat-active-provider').innerText = data.stats.active_provider || 'GEMINI';
         }
     } catch (e) {
         console.error(e);
@@ -296,6 +347,52 @@ function filterSpeciesTable() {
     rows.forEach(r => {
         r.style.display = r.innerText.toLowerCase().includes(query) ? '' : 'none';
     });
+}
+
+async function loadAdminSettings() {
+    try {
+        const res = await fetch(getApiUrl('api/admin/settings'));
+        const data = await res.json();
+        if (data.settings) {
+            document.getElementById('setting-ai-provider').value = data.settings.ai_provider || 'gemini';
+            document.getElementById('setting-ai-model').value = data.settings.ai_model || 'gemini-2.0-flash';
+            document.getElementById('setting-ai-key').value = data.settings.ai_api_key || '';
+            document.getElementById('setting-max-upload').value = data.settings.max_upload_size_mb || '10';
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+document.getElementById('settings-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const fd = new FormData(this);
+
+    try {
+        const res = await fetch(getApiUrl('api/admin/settings'), { method: 'POST', body: fd });
+        const json = await res.json();
+        if (json.success) {
+            alert(json.message);
+            loadDashboardStats();
+        } else {
+            alert('Error: ' + json.error);
+        }
+    } catch (err) {
+        alert('Failed to save settings: ' + err.message);
+    }
+});
+
+async function reseedFloraDatabase() {
+    if (!confirm('Re-seed Philippine Flora Database? This will restore standard botanical species entries.')) return;
+    try {
+        const res = await fetch(getApiUrl('api/admin/reseed'), { method: 'POST' });
+        const json = await res.json();
+        alert(json.message || json.error);
+        loadPlantsDirectory();
+        loadDashboardStats();
+    } catch (e) {
+        alert('Reseed failed: ' + e.message);
+    }
 }
 
 async function loadExpertReviews() {
