@@ -47,9 +47,11 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
             ]);
         }
 
-        // Species keyword matching from filename or metadata hints
-        $targetSpecies = 'Blumea balsamifera'; // Default to Sambong
-        $altSpecies = 'Lagerstroemia speciosa'; // Banaba as alternative candidate
+        $pdo = Database::getConnection();
+
+        // Check explicit filename or metadata keywords
+        $targetSpecies = null;
+        $altSpecies = null;
 
         if (str_contains($filenameLower, 'banaba')) {
             $targetSpecies = 'Lagerstroemia speciosa';
@@ -113,7 +115,39 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
             $altSpecies = 'Annona squamosa';
         }
 
-        $pdo = Database::getConnection();
+        // Check user questionnaire metadata hints if no direct filename keyword matched
+        if (!$targetSpecies && !empty($metadata['milky_sap']) && strtolower($metadata['milky_sap']) === 'yes') {
+            $targetSpecies = 'Euphorbia hirta'; // Tawa-tawa or Jatropha
+            $altSpecies = 'Jatropha curcas';
+        }
+
+        if (!$targetSpecies && !empty($metadata['location_found'])) {
+            $loc = strtolower($metadata['location_found']);
+            if (str_contains($loc, 'forest') || str_contains($loc, 'mountain')) {
+                $targetSpecies = 'Pterocarpus indicus'; // Narra
+                $altSpecies = 'Dillenia philippinensis';
+            } elseif (str_contains($loc, 'coastal')) {
+                $targetSpecies = 'Vitex parviflora'; // Molave
+                $altSpecies = 'Cocos nucifera';
+            }
+        }
+
+        // If still no keyword/metadata match, dynamically select species based on image content hash
+        if (!$targetSpecies) {
+            $allPlants = $pdo->query("SELECT scientific_name FROM plants ORDER BY id ASC")->fetchAll(PDO::FETCH_COLUMN);
+            if (!empty($allPlants)) {
+                $firstPath = $imagePaths[0];
+                $hashVal = file_exists($firstPath) ? crc32(file_get_contents($firstPath)) : crc32($filenameString);
+                $plantIndex = abs($hashVal) % count($allPlants);
+                $targetSpecies = $allPlants[$plantIndex];
+                $altIndex = ($plantIndex + 1) % count($allPlants);
+                $altSpecies = $allPlants[$altIndex];
+            } else {
+                $targetSpecies = 'Lagerstroemia speciosa';
+                $altSpecies = 'Blumea balsamifera';
+            }
+        }
+
         $stmt = $pdo->prepare("SELECT * FROM plants WHERE scientific_name = ?");
         $stmt->execute([$targetSpecies]);
         $plant = $stmt->fetch(PDO::FETCH_ASSOC);
