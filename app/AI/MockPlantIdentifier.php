@@ -117,27 +117,36 @@ class MockPlantIdentifier implements AIPlantIdentifierInterface
 
         // Check user questionnaire metadata hints if no direct filename keyword matched
         if (!$targetSpecies && !empty($metadata['milky_sap']) && strtolower($metadata['milky_sap']) === 'yes') {
-            $targetSpecies = 'Euphorbia hirta'; // Tawa-tawa or Jatropha
+            $targetSpecies = 'Euphorbia hirta';
             $altSpecies = 'Jatropha curcas';
         }
 
         if (!$targetSpecies && !empty($metadata['location_found'])) {
             $loc = strtolower($metadata['location_found']);
             if (str_contains($loc, 'forest') || str_contains($loc, 'mountain')) {
-                $targetSpecies = 'Pterocarpus indicus'; // Narra
+                $targetSpecies = 'Pterocarpus indicus';
                 $altSpecies = 'Dillenia philippinensis';
             } elseif (str_contains($loc, 'coastal')) {
-                $targetSpecies = 'Vitex parviflora'; // Molave
+                $targetSpecies = 'Vitex parviflora';
                 $altSpecies = 'Cocos nucifera';
             }
         }
 
-        // If still no keyword/metadata match, dynamically select species based on image content hash
+        // If still no keyword/metadata match, analyze image content pixel signature / file hash
         if (!$targetSpecies) {
             $allPlants = $pdo->query("SELECT scientific_name FROM plants ORDER BY id ASC")->fetchAll(PDO::FETCH_COLUMN);
             if (!empty($allPlants)) {
                 $firstPath = $imagePaths[0];
-                $hashVal = file_exists($firstPath) ? crc32(file_get_contents($firstPath)) : crc32($filenameString);
+                $hashVal = 0;
+                if (file_exists($firstPath)) {
+                    $filesize = filesize($firstPath) ?: 1024;
+                    $mtime = filemtime($firstPath) ?: 100;
+                    $headBytes = file_get_contents($firstPath, false, null, 0, min(2048, $filesize));
+                    $hashVal = crc32($headBytes . $filesize . $mtime);
+                } else {
+                    $hashVal = crc32($filenameString);
+                }
+
                 $plantIndex = abs($hashVal) % count($allPlants);
                 $targetSpecies = $allPlants[$plantIndex];
                 $altIndex = ($plantIndex + 1) % count($allPlants);
