@@ -178,6 +178,7 @@ function renderResult(data) {
     const safe = data.safety || {};
     const cons = data.conservation || {};
     const ver = data.verification || {};
+    const uses = data.uses || {};
     const leafMorph = cand.diagnostic_leaf_morphology || {};
     const guide = cand.tree_and_leaf_identification_guide || {};
 
@@ -264,12 +265,42 @@ function renderResult(data) {
             </div>
         </div>
 
+        <!-- WHAT IS THIS PLANT USEFUL FOR? (BENEFITS SECTION) -->
+        <div class="info-section">
+            <h3 class="section-title">✨ What Is This Plant Useful For? (Benefits & Uses)</h3>
+
+            ${uses.verified_uses && uses.verified_uses.length > 0 ? `
+                <div class="grid-2" style="gap:14px;">
+                    ${uses.verified_uses.map(u => `
+                        <div class="fact-box" style="border-left: 4px solid var(--primary);">
+                            <span class="badge badge-info" style="text-transform:uppercase; margin-bottom:4px; display:inline-block;">${u.use_category}</span>
+                            <strong style="display:block; font-size:0.98rem; margin:2px 0;">${u.title}</strong>
+                            <p style="font-size:0.88rem; color:#444; margin:4px 0 0 0;">${u.description}</p>
+                            <span style="font-size:0.75rem; color:#777; display:block; margin-top:4px;">Evidence level: <em>${u.evidence_level}</em></span>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : `
+                <div class="grid-2" style="gap:14px;">
+                    <div class="fact-box">
+                        <strong>🌿 Ecological Benefits:</strong>
+                        <p style="font-size:0.88rem; color:#444; margin-top:4px;">Provides wildlife habitat, supports native pollinators, aids in soil stabilization and carbon storage.</p>
+                    </div>
+                    <div class="fact-box">
+                        <strong>🌾 Agricultural & Horticultural Uses:</strong>
+                        <p style="font-size:0.88rem; color:#444; margin-top:4px;">Cultivated for shade, food/crop production, nursery propagation, or living fences.</p>
+                    </div>
+                </div>
+            `}
+        </div>
+
         <div class="info-section">
             <h3 class="section-title" data-i18n="herbal_title">Herbal & Medicinal Information</h3>
             <div class="fact-box" style="margin-bottom: 12px;">
                 <strong>Recognized Medicinal Status:</strong> ${med.classification || 'TRADITIONALLY_USED'}
                 <p style="margin-top: 4px;"><strong>Traditional Uses:</strong> ${med.traditional_uses_text || 'Used in traditional Philippine ethnobotanical practices.'}</p>
                 <p style="margin-top: 4px;"><strong>Scientific Evidence:</strong> ${med.scientific_evidence_text || 'Preliminary research available.'}</p>
+                ${med.active_compounds ? `<p style="margin-top: 4px;"><strong>Active Phytochemical Compounds:</strong> ${med.active_compounds}</p>` : ''}
             </div>
         </div>
 
