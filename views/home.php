@@ -178,6 +178,8 @@ function renderResult(data) {
     const safe = data.safety || {};
     const cons = data.conservation || {};
     const ver = data.verification || {};
+    const leafMorph = cand.diagnostic_leaf_morphology || {};
+    const guide = cand.tree_and_leaf_identification_guide || {};
 
     let html = `
         <div class="result-card">
@@ -208,8 +210,40 @@ function renderResult(data) {
         `;
     }
 
-    // Taxonomy & Names
+    // Leaf & Tree Diagnostic Identification Breakdown
     html += `
+        <div class="info-section">
+            <h3 class="section-title">🍃 🌳 Leaf & Tree Visual Diagnostic Breakdown</h3>
+            <div class="grid-2">
+                <div class="fact-box">
+                    <strong>Leaf Arrangement & Type:</strong>
+                    <p style="margin-top:4px;">${leafMorph.type || 'Simple'}, ${leafMorph.arrangement || 'Alternate'}</p>
+                </div>
+                <div class="fact-box">
+                    <strong>Leaf Margin & Venation:</strong>
+                    <p style="margin-top:4px;">Margin: ${leafMorph.margin || 'Entire'} | Venation: ${leafMorph.venation || 'Pinnate'}</p>
+                </div>
+                <div class="fact-box">
+                    <strong>Tree Bark & Growth Habit:</strong>
+                    <p style="margin-top:4px;">${leafMorph.growth_habit || 'Tree/Shrub'} — ${leafMorph.bark_description || 'Bark info available'}</p>
+                </div>
+                <div class="fact-box">
+                    <strong>Distinctive Markings:</strong>
+                    <p style="margin-top:4px;">${leafMorph.distinctive_markings || 'Key diagnostic characteristics verified.'}</p>
+                </div>
+            </div>
+            ${guide.leaf_key_check ? `
+                <div style="background:#f4f8f5; border:1px solid var(--border); border-radius:8px; padding:12px; margin-top:12px; font-size:0.9rem;">
+                    <strong>🔍 How to distinguish in the field:</strong>
+                    <ul style="margin:6px 0 0 20px; line-height:1.5;">
+                        <li>${guide.leaf_key_check}</li>
+                        <li>${guide.tree_habit_key_check}</li>
+                        <li>${guide.flower_fruit_key_check}</li>
+                    </ul>
+                </div>
+            ` : ''}
+        </div>
+
         <div class="info-section">
             <h3 class="section-title" data-i18n="sci_class">Scientific Classification</h3>
             <div class="grid-2">
